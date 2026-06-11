@@ -23,16 +23,24 @@ PhotoWindow 是一个摄影事件提醒类 iOS MVP 原型。第一版聚焦“�
 3. 打开 `PhotoWindow.xcodeproj`。
 4. 选择 `PhotoWindow` scheme 和 iOS 17+ 模拟器运行。
 
-项目已包含共享 `PhotoWindow` scheme。当前机器只检测到 Command Line Tools，缺少完整 Xcode、iOS Simulator SDK 和可用的 `XCTest` 模块，因此 `xcodebuild` 与单元测试需要在完整 Xcode 环境下运行：
+项目已包含共享 `PhotoWindow` scheme。当前开发环境已在 Xcode 26.3 / iOS Simulator 26.3 下验证。可运行：
 
 ```bash
-xcodebuild -scheme PhotoWindow -destination 'platform=iOS Simulator,name=iPhone 16' test
+xcodebuild -scheme PhotoWindow -destination 'platform=iOS Simulator,name=iPhone 17' test
 ```
 
-在没有完整 Xcode 的当前环境下，可以运行核心业务层 smoke verification：
+也可以运行不依赖 iOS Simulator 的核心业务层 smoke verification：
 
 ```bash
 bash Scripts/verify_core.sh
+```
+
+如需手动安装到模拟器：
+
+```bash
+xcrun simctl boot "iPhone 17"
+xcrun simctl install booted ~/Library/Developer/Xcode/DerivedData/PhotoWindow-*/Build/Products/Debug-iphonesimulator/PhotoWindow.app
+xcrun simctl launch booted com.photowindow.app
 ```
 
 ## 架构
@@ -57,3 +65,7 @@ bash Scripts/verify_core.sh
 - 增加 MapKit 地点选择。
 - 增加用户反馈：有用 / 没用 / 我去了 / 我没去。
 - 增加日历导出、分享事件卡片和更多自定义提醒规则。
+
+## 参考
+
+- [MVP_CHECKLIST.md](MVP_CHECKLIST.md)：规格覆盖与验收证据。
