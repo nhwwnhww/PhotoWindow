@@ -15,7 +15,7 @@
     "description": "本地 curated 事件：特殊涂装航班预计傍晚抵达，机身识别度高，适合记录侧面进近与落地瞬间。",
     "tags": ["Special Livery", "Qantas", "Retro Livery", "Arrival", "特殊涂装"],
     "sourceType": "curatedJSON",
-    "sourceName": "PhotoWindow local aviation seed",
+    "sourceName": "photochaser local aviation seed",
     "sourceURL": null,
     "lastUpdated": "2026-06-12T08:00:00+10:00",
     "createdAt": "2026-06-12T08:00:00+10:00"
@@ -57,7 +57,7 @@
     "description": "流星雨活跃窗口叠加暗空地点，凌晨月光影响小，适合连续拍摄和广角构图。",
     "tags": ["Meteor Shower", "Dark Sky", "Low Moon", "流星雨"],
     "sourceType": "astronomyCalendar",
-    "sourceName": "PhotoWindow astronomy seed",
+    "sourceName": "photochaser astronomy seed",
     "sourceURL": null,
     "lastUpdated": "2026-06-12T08:20:00+10:00",
     "createdAt": "2026-06-12T08:20:00+10:00"
@@ -78,7 +78,7 @@
     "description": "低光污染、低月光和银河核心可见时段重叠，是本周最值得规划的银河窗口之一。",
     "tags": ["Milky Way", "New Moon", "Dark Sky", "银河"],
     "sourceType": "astronomyCalendar",
-    "sourceName": "PhotoWindow astronomy seed",
+    "sourceName": "photochaser astronomy seed",
     "sourceURL": null,
     "lastUpdated": "2026-06-12T08:25:00+10:00",
     "createdAt": "2026-06-12T08:25:00+10:00"
@@ -99,7 +99,7 @@
     "description": "毕业季人像需求集中，下午柔光适合砂岩建筑、草坪和湖边组合拍摄。",
     "tags": ["Graduation Season", "Portrait", "Campus", "毕业季"],
     "sourceType": "curatedJSON",
-    "sourceName": "PhotoWindow local campus seed",
+    "sourceName": "photochaser local campus seed",
     "sourceURL": null,
     "lastUpdated": "2026-06-12T08:30:00+10:00",
     "createdAt": "2026-06-12T08:30:00+10:00"
@@ -120,7 +120,7 @@
     "description": "日落前云层结构可能打开，河岸前景和城市天际线适合捕捉火烧云反光。",
     "tags": ["Fire Sunset", "Sunset", "South Bank", "火烧云可能"],
     "sourceType": "weatherDerived",
-    "sourceName": "PhotoWindow weather-derived seed",
+    "sourceName": "photochaser weather-derived seed",
     "sourceURL": null,
     "lastUpdated": "2026-06-12T08:35:00+10:00",
     "createdAt": "2026-06-12T08:35:00+10:00"
@@ -141,7 +141,7 @@
     "description": "清晨湿度和低风速可能形成河面低雾，适合城市剪影、桥梁和晨光层次。",
     "tags": ["Fog", "Low Cloud", "Sunrise", "清晨低雾"],
     "sourceType": "weatherDerived",
-    "sourceName": "PhotoWindow weather-derived seed",
+    "sourceName": "photochaser weather-derived seed",
     "sourceURL": null,
     "lastUpdated": "2026-06-12T08:40:00+10:00",
     "createdAt": "2026-06-12T08:40:00+10:00"
@@ -162,7 +162,7 @@
     "description": "蓝调时刻与城市灯光亮起时间重叠，适合三脚架拍摄河岸夜景和建筑层次。",
     "tags": ["Blue Hour", "Cityscape", "Night View", "蓝调时刻"],
     "sourceType": "systemGenerated",
-    "sourceName": "PhotoWindow blue-hour predictor",
+    "sourceName": "photochaser blue-hour predictor",
     "sourceURL": null,
     "lastUpdated": "2026-06-12T08:45:00+10:00",
     "createdAt": "2026-06-12T08:45:00+10:00"

@@ -54,10 +54,22 @@ struct RemoteLocationSearchService: LocationSearchServicing {
             throw LocationSearchError.invalidCoordinate
         }
 
+        let coordinate = LocationCoordinate(latitude: latitude, longitude: longitude)
+        LocationDebugStateStore.recordSelectedCoordinate(coordinate)
+
         do {
-            return try await fetchRemoteReverse(latitude: latitude, longitude: longitude)
+            let location = try await fetchRemoteReverse(latitude: latitude, longitude: longitude)
+            LocationDebugStateStore.recordReverseSuccess(location, coordinate: coordinate)
+            return location
         } catch {
-            return try await fallbackService.reverseGeocode(latitude: latitude, longitude: longitude)
+            do {
+                let fallbackLocation = try await fallbackService.reverseGeocode(latitude: latitude, longitude: longitude)
+                LocationDebugStateStore.recordReverseFallback(fallbackLocation, coordinate: coordinate, error: error)
+                return fallbackLocation
+            } catch {
+                LocationDebugStateStore.recordReverseError(error, coordinate: coordinate)
+                throw error
+            }
         }
     }
 
@@ -372,7 +384,7 @@ private struct RemoteLocationDTO: Decodable {
             country: country?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false ? country! : "Unknown",
             lightPollutionLevel: lightPollutionLevel ?? Self.defaultLightPollutionLevel(for: resolvedType),
             locationType: resolvedType,
-            notes: notes ?? "由 PhotoWindow server 地点搜索返回。",
+            notes: notes ?? "由 photochaser server 地点搜索返回。",
             supportedCategories: supportedCategories ?? resolvedType.defaultSupportedCategories,
             createdAt: createdAt ?? now,
             updatedAt: updatedAt ?? now

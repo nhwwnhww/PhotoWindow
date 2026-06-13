@@ -13,6 +13,7 @@ struct LocationDetailView: View {
             if let location = viewModel.location {
                 VStack(alignment: .leading, spacing: 18) {
                     header(location)
+                    mapPreview(location)
                     actions(location)
                     categories(location)
                     windowsSection
@@ -51,6 +52,23 @@ struct LocationDetailView: View {
                     .padding()
             }
         }
+    }
+
+    private func mapPreview(_ location: ShootingLocation) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("地图预览")
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(.white)
+                Spacer()
+                Label(location.locationType.displayName, systemImage: location.locationType.iconName)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.photoAccent)
+            }
+
+            LocationMapPreview(location: location)
+        }
+        .photoCardStyle()
     }
 
     private func header(_ location: ShootingLocation) -> some View {

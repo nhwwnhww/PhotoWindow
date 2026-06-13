@@ -1,6 +1,10 @@
 import Foundation
 import Combine
 
+extension Notification.Name {
+    static let savedLocationsDidChange = Notification.Name("PhotoWindow.savedLocationsDidChange")
+}
+
 @MainActor
 final class AddLocationViewModel: ObservableObject {
     @Published var searchQuery = ""
@@ -16,6 +20,7 @@ final class AddLocationViewModel: ObservableObject {
     @Published var notes = ""
     @Published private(set) var isLoading = false
     @Published private(set) var didSave = false
+    @Published private(set) var selectedMapCoordinate: LocationCoordinate?
     @Published var errorMessage: String?
 
     private let savedLocationRepository: any SavedLocationRepository
@@ -45,6 +50,17 @@ final class AddLocationViewModel: ObservableObject {
             Double(latitudeText) != nil &&
             Double(longitudeText) != nil &&
             !selectedCategories.isEmpty
+    }
+
+    var mapInitialCoordinate: LocationCoordinate {
+        if let latitude = Double(latitudeText),
+           let longitude = Double(longitudeText),
+           (-90...90).contains(latitude),
+           (-180...180).contains(longitude) {
+            return LocationCoordinate(latitude: latitude, longitude: longitude)
+        }
+
+        return selectedMapCoordinate ?? .brisbane
     }
 
     func search() async {
@@ -78,16 +94,23 @@ final class AddLocationViewModel: ObservableObject {
             return
         }
 
-        isLoading = true
-        defer { isLoading = false }
+        _ = await resolveCoordinate(
+            LocationCoordinate(latitude: latitude, longitude: longitude),
+            keepNameIfPresent: true
+        )
+    }
 
-        do {
-            let location = try await locationSearchService.reverseGeocode(latitude: latitude, longitude: longitude)
-            apply(location, keepNameIfPresent: true)
-            errorMessage = nil
-        } catch {
-            errorMessage = error.localizedDescription
-        }
+    func updateMapSelectedCoordinate(_ coordinate: LocationCoordinate) {
+        guard (-90...90).contains(coordinate.latitude),
+              (-180...180).contains(coordinate.longitude) else { return }
+        selectedMapCoordinate = coordinate
+        latitudeText = String(format: "%.6f", coordinate.latitude)
+        longitudeText = String(format: "%.6f", coordinate.longitude)
+        LocationDebugStateStore.recordSelectedCoordinate(coordinate)
+    }
+
+    func applyMapSelection(_ coordinate: LocationCoordinate) async -> Bool {
+        await resolveCoordinate(coordinate, keepNameIfPresent: false)
     }
 
     func selectSearchResult(_ location: ShootingLocation) {
@@ -145,11 +168,43 @@ final class AddLocationViewModel: ObservableObject {
             } else {
                 try await savedLocationRepository.saveLocation(location)
             }
+            NotificationCenter.default.post(name: .savedLocationsDidChange, object: nil)
             didSave = true
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+
+    private func resolveCoordinate(
+        _ coordinate: LocationCoordinate,
+        keepNameIfPresent: Bool
+    ) async -> Bool {
+        guard (-90...90).contains(coordinate.latitude),
+              (-180...180).contains(coordinate.longitude) else {
+            errorMessage = LocationSearchError.invalidCoordinate.localizedDescription
+            return false
+        }
+
+        updateMapSelectedCoordinate(coordinate)
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            let location = try await locationSearchService.reverseGeocode(
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude
+            )
+            apply(location, keepNameIfPresent: keepNameIfPresent)
+            errorMessage = nil
+        } catch {
+            let location = Self.customLocation(for: coordinate)
+            LocationDebugStateStore.recordReverseFallback(location, coordinate: coordinate, error: error)
+            apply(location, keepNameIfPresent: keepNameIfPresent)
+            errorMessage = "地点 API 暂不可用，已使用自定义坐标。"
+        }
+
+        return true
     }
 
     private func apply(_ location: ShootingLocation, keepNameIfPresent: Bool = false) {
@@ -167,6 +222,25 @@ final class AddLocationViewModel: ObservableObject {
             location.supportedCategories.isEmpty
                 ? location.locationType.defaultSupportedCategories
                 : location.supportedCategories
+        )
+        selectedMapCoordinate = LocationCoordinate(latitude: location.latitude, longitude: location.longitude)
+        if let selectedMapCoordinate {
+            LocationDebugStateStore.recordSelectedCoordinate(selectedMapCoordinate)
+        }
+    }
+
+    private static func customLocation(for coordinate: LocationCoordinate) -> ShootingLocation {
+        ShootingLocation(
+            id: UUID(),
+            name: "自定义点位 \(String(format: "%.4f", coordinate.latitude)), \(String(format: "%.4f", coordinate.longitude))",
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude,
+            city: "Manual",
+            country: "Australia",
+            lightPollutionLevel: 5,
+            locationType: .custom,
+            notes: "地图选点创建的自定义坐标。",
+            supportedCategories: ShootingLocationType.custom.defaultSupportedCategories
         )
     }
 }

@@ -44,7 +44,7 @@ struct AddLocationView: View {
             Text(viewModel.isEditing ? "更新拍摄地点" : "添加你的拍摄地点")
                 .font(.largeTitle.weight(.bold))
                 .foregroundStyle(.white)
-            Text("PhotoWindow 会基于地点类型、光污染和适合类别生成未来拍摄窗口。")
+            Text("photochaser 会基于地点类型、光污染和适合类别生成未来拍摄窗口。")
                 .font(.subheadline)
                 .foregroundStyle(Color.photoMutedText)
         }
@@ -100,6 +100,15 @@ struct AddLocationView: View {
             Text("经纬度")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(.white)
+
+            NavigationLink {
+                MapLocationPickerView(viewModel: viewModel)
+            } label: {
+                Label("地图选点", systemImage: "map")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Color.photoAccent)
 
             HStack(spacing: 10) {
                 TextField("纬度", text: $viewModel.latitudeText)

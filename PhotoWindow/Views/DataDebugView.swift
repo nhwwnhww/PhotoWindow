@@ -12,6 +12,8 @@ struct DataDebugView: View {
             VStack(alignment: .leading, spacing: 18) {
                 header
                 environmentSection
+                mapLocationSection
+                calendarShareSection
                 diagnosticsSection
                 apiDiagnosticsSection
                 aviationDiagnosticsSection
@@ -92,6 +94,32 @@ struct DataDebugView: View {
             }
             .buttonStyle(.bordered)
             .tint(Color.photoAccent)
+        }
+        .photoCardStyle()
+    }
+
+    private var mapLocationSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Map / Location")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(.white)
+
+            detailRow("current selected coordinate", viewModel.currentSelectedCoordinate)
+            detailRow("last reverse geocode result", viewModel.lastReverseGeocodeResult)
+            detailRow("last location API error", viewModel.lastLocationAPIError)
+        }
+        .photoCardStyle()
+    }
+
+    private var calendarShareSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Calendar / Share")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(.white)
+
+            detailRow("calendar permission status", viewModel.calendarPermissionStatus)
+            detailRow("last calendar export result", viewModel.lastCalendarExportResult)
+            detailRow("last shareURL fetch result", viewModel.lastShareURLFetchResult)
         }
         .photoCardStyle()
     }

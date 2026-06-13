@@ -9,6 +9,8 @@ final class SpecialEventDetailViewModel: ObservableObject {
     @Published private(set) var isAlertEnabled = false
     @Published private(set) var isBookmarked = false
     @Published var errorMessage: String?
+    @Published private(set) var isExportingCalendar = false
+    @Published private(set) var exportMessage: String?
 
     private let eventID: UUID
     private let specialEventRepository: any SpecialEventRepository
@@ -19,6 +21,7 @@ final class SpecialEventDetailViewModel: ObservableObject {
     private let alertRuleRepository: any AlertRuleRepository
     private let userRepository: any UserRepository
     private let notificationService: any NotificationServicing
+    private let calendarExportService: CalendarExportService
     private let generationService = ShootingWindowGenerationService()
 
     init(
@@ -30,7 +33,8 @@ final class SpecialEventDetailViewModel: ObservableObject {
         astronomyRepository: any AstronomyRepository,
         alertRuleRepository: any AlertRuleRepository,
         userRepository: any UserRepository,
-        notificationService: any NotificationServicing
+        notificationService: any NotificationServicing,
+        calendarExportService: CalendarExportService
     ) {
         self.eventID = eventID
         self.specialEventRepository = specialEventRepository
@@ -41,6 +45,7 @@ final class SpecialEventDetailViewModel: ObservableObject {
         self.alertRuleRepository = alertRuleRepository
         self.userRepository = userRepository
         self.notificationService = notificationService
+        self.calendarExportService = calendarExportService
     }
 
     var recommendationText: String {
@@ -133,6 +138,35 @@ final class SpecialEventDetailViewModel: ObservableObject {
         }
     }
 
+    func addToCalendar() async {
+        guard let event else { return }
+
+        isExportingCalendar = true
+        defer { isExportingCalendar = false }
+
+        do {
+            _ = try await calendarExportService.addEvent(calendarItem(for: event))
+            exportMessage = "已加入系统日历。"
+            errorMessage = nil
+        } catch {
+            exportMessage = nil
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func shareActivityItems() -> [Any] {
+        guard let card = shareCard() else { return [] }
+        CalendarShareDebugStateStore.recordShareURLResult(card.shareURLResultText)
+        exportMessage = "分享卡片已准备。"
+        return card.activityItems
+    }
+
+    func copyPlanText() -> String? {
+        guard let card = shareCard() else { return nil }
+        exportMessage = "拍摄计划已复制。"
+        return card.text
+    }
+
     static func formatReminderLead(minutes: Int) -> String {
         if minutes == 1_500 {
             return "1 天 + 1 小时"
@@ -177,6 +211,53 @@ final class SpecialEventDetailViewModel: ObservableObject {
         }
 
         return generated
+    }
+
+    private func calendarItem(for event: SpecialEvent) -> CalendarExportItem {
+        CalendarExportItem(
+            title: "photochaser：\(event.title)",
+            startTime: event.startTime,
+            endTime: event.endTime,
+            location: event.locationName,
+            notes: calendarNotes(for: event)
+        )
+    }
+
+    private func calendarNotes(for event: SpecialEvent) -> String {
+        var lines = [
+            "推荐原因：\(recommendationText)",
+            "sourceName：\(SharePlanComposer.sourceName(for: event))"
+        ]
+
+        if let shootingWindow {
+            lines.insert("推荐等级：\(shootingWindow.scoreLevel.displayName) · \(shootingWindow.score)/100", at: 1)
+            lines.insert("天气摘要：\(SharePlanComposer.weatherSummary(shootingWindow.weatherSnapshot))", at: 2)
+        } else {
+            lines.insert("推荐等级：\(event.importanceLevel.displayName) · 可信度\(event.confidenceLevel.displayName)", at: 1)
+            lines.insert("天气摘要：暂未生成关联 ShootingWindow。", at: 2)
+        }
+
+        return lines.joined(separator: "\n")
+    }
+
+    private func shareCard() -> SharePlanCard? {
+        guard let event else { return nil }
+        return SharePlanCard(
+            title: event.title,
+            timeText: eventTimeText,
+            locationText: event.locationName,
+            scoreText: shareScoreText(for: event),
+            reasonText: recommendationText,
+            sourceName: SharePlanComposer.sourceName(for: event),
+            shareURL: SharePlanComposer.shareURL(for: event)
+        )
+    }
+
+    private func shareScoreText(for event: SpecialEvent) -> String {
+        if let shootingWindow {
+            return "\(shootingWindow.scoreLevel.displayName) · \(shootingWindow.score)/100"
+        }
+        return "\(event.importanceLevel.displayName) · 可信度\(event.confidenceLevel.displayName)"
     }
 
     private func notificationItem(for event: SpecialEvent, window: ShootingWindow) -> NotificationItem {

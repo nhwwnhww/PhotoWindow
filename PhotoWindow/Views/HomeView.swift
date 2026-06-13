@@ -34,10 +34,13 @@ struct HomeView: View {
             .padding(20)
         }
         .background(Color.photoBackground.ignoresSafeArea())
-        .navigationTitle("PhotoWindow")
+        .navigationTitle("photochaser")
         .photoInlineNavigationTitle()
         .task {
             await viewModel.load()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .savedLocationsDidChange)) { _ in
+            Task { await viewModel.load() }
         }
         .overlay(alignment: .bottom) {
             if let errorMessage = viewModel.errorMessage, viewModel.fallbackMessage == nil {
@@ -299,7 +302,7 @@ struct HomeView: View {
 
     private var firstLocationEmptyState: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("添加你的第一个拍摄地点，PhotoWindow 会帮你寻找最佳拍摄时间。")
+            Text("添加你的第一个拍摄地点，photochaser 会帮你寻找最佳拍摄时间。")
                 .font(.headline.weight(.semibold))
                 .foregroundStyle(.white)
                 .fixedSize(horizontal: false, vertical: true)

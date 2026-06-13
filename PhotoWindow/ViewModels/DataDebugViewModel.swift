@@ -102,6 +102,12 @@ final class DataDebugViewModel: ObservableObject {
     @Published private(set) var isLoading = false
     @Published private(set) var isCheckingAPI = false
     @Published private(set) var apiDiagnostics: [APIDiagnosticResult] = []
+    @Published private(set) var currentSelectedCoordinate = "-"
+    @Published private(set) var lastReverseGeocodeResult = "-"
+    @Published private(set) var lastLocationAPIError = "-"
+    @Published private(set) var calendarPermissionStatus = "-"
+    @Published private(set) var lastCalendarExportResult = "-"
+    @Published private(set) var lastShareURLFetchResult = "-"
 
     private let specialEventDataService: SpecialEventDataService
     private let notificationService: any NotificationServicing
@@ -230,6 +236,36 @@ final class DataDebugViewModel: ObservableObject {
         scoringConfigError = scoringRuleConfigService.lastLoadError
         notificationQualityRules = notificationService.notificationQualityRules()
         skippedNotificationRecords = notificationService.recentSkippedNotifications()
+        updateLocationDiagnostics()
+        updateCalendarShareDiagnostics()
+    }
+
+    private func updateLocationDiagnostics() {
+        let snapshot = LocationDebugStateStore.snapshot()
+        currentSelectedCoordinate = snapshot.selectedCoordinate?.coordinateText ?? "-"
+
+        if let result = snapshot.lastReverseGeocodeResult {
+            let status = snapshot.lastReverseGeocodeSucceeded == false ? "fallback" : "success"
+            let checkedAt = snapshot.lastReverseGeocodeCheckedAt.map { " · \(Self.shortTimeFormatter.string(from: $0))" } ?? ""
+            lastReverseGeocodeResult = "\(status) · \(result)\(checkedAt)"
+        } else {
+            lastReverseGeocodeResult = "-"
+        }
+
+        lastLocationAPIError = snapshot.lastLocationAPIError ?? "-"
+    }
+
+    private func updateCalendarShareDiagnostics() {
+        calendarPermissionStatus = CalendarExportService.authorizationStatusDescription
+        let snapshot = CalendarShareDebugStateStore.snapshot()
+        lastCalendarExportResult = debugResultText(snapshot.lastCalendarExportResult, at: snapshot.lastCalendarExportAt)
+        lastShareURLFetchResult = debugResultText(snapshot.lastShareURLFetchResult, at: snapshot.lastShareURLFetchAt)
+    }
+
+    private func debugResultText(_ result: String?, at checkedAt: Date?) -> String {
+        guard let result, !result.isEmpty else { return "-" }
+        let checkedAtText = checkedAt.map { " · \(Self.shortTimeFormatter.string(from: $0))" } ?? ""
+        return "\(result)\(checkedAtText)"
     }
 
     private func loadPreferenceDiagnostics() async {
@@ -439,6 +475,13 @@ final class DataDebugViewModel: ObservableObject {
     private static let iso8601WithFractions: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+
+    private static let shortTimeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
         return formatter
     }()
 }

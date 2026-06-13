@@ -223,7 +223,9 @@ struct SpecialEventSourceSummary: View {
     }
 
     private var sourceName: String {
-        event.sourceName.trimmingCharacters(in: .whitespacesAndNewlines)
+        event.sourceName
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "PhotoWindow", with: "photochaser")
     }
 }
 

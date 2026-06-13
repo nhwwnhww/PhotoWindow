@@ -71,7 +71,7 @@ final class NotificationService: NotificationServicing {
         let roundedSeconds = max(Int(seconds), 1)
         let notification = NotificationItem(
             id: UUID(),
-            title: "PhotoWindow 测试提醒",
+            title: "photochaser 测试提醒",
             body: "\(roundedSeconds) 秒后测试提醒已触发。",
             triggerTime: Date().addingTimeInterval(TimeInterval(roundedSeconds)),
             relatedWindow: nil,

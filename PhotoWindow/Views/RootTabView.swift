@@ -104,7 +104,8 @@ struct SpecialEventDetailScreen: View {
                 astronomyRepository: container.astronomyRepository,
                 alertRuleRepository: container.alertRuleRepository,
                 userRepository: container.userRepository,
-                notificationService: container.notificationService
+                notificationService: container.notificationService,
+                calendarExportService: container.calendarExportService
             )
         )
     }
@@ -139,7 +140,8 @@ struct ShootingWindowDetailScreen: View {
                 eventWatchlistRepository: container.eventWatchlistRepository,
                 userRepository: container.userRepository,
                 notificationService: container.notificationService,
-                analyticsService: container.analyticsService
+                analyticsService: container.analyticsService,
+                calendarExportService: container.calendarExportService
             )
         )
     }

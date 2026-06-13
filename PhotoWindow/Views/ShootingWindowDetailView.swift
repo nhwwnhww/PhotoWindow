@@ -1,7 +1,9 @@
 import SwiftUI
+import UIKit
 
 struct ShootingWindowDetailView: View {
     @StateObject private var viewModel: ShootingWindowDetailViewModel
+    @State private var shareSheetItem: ShareSheetItem?
 
     init(viewModel: ShootingWindowDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -13,6 +15,7 @@ struct ShootingWindowDetailView: View {
                 VStack(alignment: .leading, spacing: 22) {
                     header(window)
                     actionButtons(window)
+                    exportActionSection
                     reminderPresetSection(window)
                     eventReminderSection(window)
                     recommendation(window)
@@ -39,6 +42,19 @@ struct ShootingWindowDetailView: View {
         .photoInlineNavigationTitle()
         .task {
             await viewModel.load()
+        }
+        .sheet(item: $shareSheetItem) { item in
+            ShareSheet(activityItems: item.activityItems)
+        }
+        .overlay(alignment: .bottom) {
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .padding(10)
+                    .background(Color.red.opacity(0.85))
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    .padding()
+            }
         }
     }
 
@@ -94,6 +110,54 @@ struct ShootingWindowDetailView: View {
             .tint(Color.photoAccent)
             .accessibilityLabel(window.isBookmarked ? "取消收藏" : "收藏")
         }
+    }
+
+    private var exportActionSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("拍摄计划")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(.white)
+
+            Button {
+                Task { await viewModel.addToCalendar() }
+            } label: {
+                Label(viewModel.isExportingCalendar ? "写入中" : "加入系统日历", systemImage: "calendar.badge.plus")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Color.photoAccent)
+            .disabled(viewModel.isExportingCalendar)
+
+            VStack(spacing: 10) {
+                Button {
+                    let items = viewModel.shareActivityItems()
+                    guard !items.isEmpty else { return }
+                    shareSheetItem = ShareSheetItem(activityItems: items)
+                } label: {
+                    Label("分享拍摄卡片", systemImage: "square.and.arrow.up")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .tint(Color.photoAccent)
+
+                Button {
+                    guard let text = viewModel.copyPlanText() else { return }
+                    UIPasteboard.general.string = text
+                } label: {
+                    Label("复制拍摄计划文本", systemImage: "doc.on.doc")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .tint(Color.photoAccent)
+            }
+
+            if let exportMessage = viewModel.exportMessage {
+                Label(exportMessage, systemImage: "checkmark.circle")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.photoAccent)
+            }
+        }
+        .photoCardStyle()
     }
 
     private func reminderPresetSection(_ window: ShootingWindow) -> some View {

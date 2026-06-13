@@ -1,7 +1,9 @@
 import SwiftUI
+import UIKit
 
 struct SpecialEventDetailView: View {
     @StateObject private var viewModel: SpecialEventDetailViewModel
+    @State private var shareSheetItem: ShareSheetItem?
 
     init(viewModel: SpecialEventDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -13,6 +15,7 @@ struct SpecialEventDetailView: View {
                 VStack(alignment: .leading, spacing: 22) {
                     header(event)
                     actionButtons
+                    exportActionSection
                     recommendationSection
                     metadataSection(event)
                     sourceSection(event)
@@ -36,6 +39,9 @@ struct SpecialEventDetailView: View {
         .photoInlineNavigationTitle()
         .task {
             await viewModel.load()
+        }
+        .sheet(item: $shareSheetItem) { item in
+            ShareSheet(activityItems: item.activityItems)
         }
         .overlay(alignment: .bottom) {
             if let errorMessage = viewModel.errorMessage {
@@ -99,6 +105,54 @@ struct SpecialEventDetailView: View {
         }
     }
 
+    private var exportActionSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("拍摄计划")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(.white)
+
+            Button {
+                Task { await viewModel.addToCalendar() }
+            } label: {
+                Label(viewModel.isExportingCalendar ? "写入中" : "加入系统日历", systemImage: "calendar.badge.plus")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Color.photoAccent)
+            .disabled(viewModel.isExportingCalendar)
+
+            VStack(spacing: 10) {
+                Button {
+                    let items = viewModel.shareActivityItems()
+                    guard !items.isEmpty else { return }
+                    shareSheetItem = ShareSheetItem(activityItems: items)
+                } label: {
+                    Label("分享拍摄卡片", systemImage: "square.and.arrow.up")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .tint(Color.photoAccent)
+
+                Button {
+                    guard let text = viewModel.copyPlanText() else { return }
+                    UIPasteboard.general.string = text
+                } label: {
+                    Label("复制拍摄计划文本", systemImage: "doc.on.doc")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .tint(Color.photoAccent)
+            }
+
+            if let exportMessage = viewModel.exportMessage {
+                Label(exportMessage, systemImage: "checkmark.circle")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.photoAccent)
+            }
+        }
+        .photoCardStyle()
+    }
+
     private var recommendationSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("推荐理由")
@@ -143,7 +197,7 @@ struct SpecialEventDetailView: View {
                 .foregroundStyle(.white)
 
             detailRow("sourceType", "\(event.sourceType.displayName) · \(event.sourceType.rawValue)")
-            detailRow("sourceName", event.sourceName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "-" : event.sourceName)
+            detailRow("sourceName", displaySourceName(for: event))
             sourceURLRow(event.sourceURL, title: "sourceURL")
             detailRow("lastUpdated", viewModel.sourceUpdatedText)
 
@@ -214,6 +268,13 @@ struct SpecialEventDetailView: View {
                 .foregroundStyle(.white)
                 .multilineTextAlignment(.trailing)
         }
+    }
+
+    private func displaySourceName(for event: SpecialEvent) -> String {
+        let sourceName = event.sourceName
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "PhotoWindow", with: "photochaser")
+        return sourceName.isEmpty ? "-" : sourceName
     }
 
     @ViewBuilder

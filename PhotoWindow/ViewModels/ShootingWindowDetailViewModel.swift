@@ -30,6 +30,8 @@ final class ShootingWindowDetailViewModel: ObservableObject {
     @Published var selectedFeedbackRating: FeedbackRating?
     @Published var feedbackComment = ""
     @Published var errorMessage: String?
+    @Published private(set) var isExportingCalendar = false
+    @Published private(set) var exportMessage: String?
 
     let reminderPresetOptions = ReminderPresetOption.standardOptions
 
@@ -41,6 +43,7 @@ final class ShootingWindowDetailViewModel: ObservableObject {
     private let userRepository: any UserRepository
     private let notificationService: any NotificationServicing
     private let analyticsService: any AnalyticsServicing
+    private let calendarExportService: CalendarExportService
     private let watchlistMatchingService = EventWatchlistMatchingService()
     private let reminderMergeService = ReminderMergeService()
     private var allWindows: [ShootingWindow] = []
@@ -53,7 +56,8 @@ final class ShootingWindowDetailViewModel: ObservableObject {
         eventWatchlistRepository: any EventWatchlistRepository,
         userRepository: any UserRepository,
         notificationService: any NotificationServicing,
-        analyticsService: any AnalyticsServicing
+        analyticsService: any AnalyticsServicing,
+        calendarExportService: CalendarExportService
     ) {
         self.windowID = windowID
         self.shootingWindowRepository = shootingWindowRepository
@@ -63,6 +67,7 @@ final class ShootingWindowDetailViewModel: ObservableObject {
         self.userRepository = userRepository
         self.notificationService = notificationService
         self.analyticsService = analyticsService
+        self.calendarExportService = calendarExportService
     }
 
     func load() async {
@@ -181,6 +186,35 @@ final class ShootingWindowDetailViewModel: ObservableObject {
         }
     }
 
+    func addToCalendar() async {
+        guard let window else { return }
+
+        isExportingCalendar = true
+        defer { isExportingCalendar = false }
+
+        do {
+            _ = try await calendarExportService.addEvent(calendarItem(for: window))
+            exportMessage = "已加入系统日历。"
+            errorMessage = nil
+        } catch {
+            exportMessage = nil
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func shareActivityItems() -> [Any] {
+        guard let card = shareCard() else { return [] }
+        CalendarShareDebugStateStore.recordShareURLResult(card.shareURLResultText)
+        exportMessage = "分享卡片已准备。"
+        return card.activityItems
+    }
+
+    func copyPlanText() -> String? {
+        guard let card = shareCard() else { return nil }
+        exportMessage = "拍摄计划已复制。"
+        return card.text
+    }
+
     static func formatReminderLead(minutes: Int) -> String {
         if minutes == 1_500 {
             return "1 天 + 1 小时"
@@ -205,6 +239,51 @@ final class ShootingWindowDetailViewModel: ObservableObject {
             selectedReminderMinutes = window.defaultReminderLeadMinutes
         }
         usesCustomReminder = !reminderPresetOptions.contains { $0.minutes == selectedReminderMinutes }
+    }
+
+    private func calendarItem(for window: ShootingWindow) -> CalendarExportItem {
+        CalendarExportItem(
+            title: "photochaser：\(window.windowTitle)",
+            startTime: window.startTime,
+            endTime: window.endTime,
+            location: locationText(for: window),
+            notes: calendarNotes(for: window)
+        )
+    }
+
+    private func calendarNotes(for window: ShootingWindow) -> String {
+        let recommendation = window.effectiveRecommendationResult
+        return [
+            "推荐原因：\(recommendation.reasonSummary)",
+            "拍摄建议：\(recommendation.recommendationText)",
+            "天气摘要：\(SharePlanComposer.weatherSummary(window.weatherSnapshot))",
+            "sourceName：\(SharePlanComposer.sourceName(for: window))"
+        ].joined(separator: "\n")
+    }
+
+    private func shareCard() -> SharePlanCard? {
+        guard let window else { return nil }
+        let recommendation = window.effectiveRecommendationResult
+        return SharePlanCard(
+            title: window.windowTitle,
+            timeText: timeText(start: window.startTime, end: window.endTime),
+            locationText: locationText(for: window),
+            scoreText: "\(window.scoreLevel.displayName) · \(window.score)/100",
+            reasonText: [
+                recommendation.reasonSummary,
+                recommendation.recommendationText
+            ].joined(separator: "\n"),
+            sourceName: SharePlanComposer.sourceName(for: window),
+            shareURL: nil
+        )
+    }
+
+    private func timeText(start: Date, end: Date) -> String {
+        "\(start.formatted(date: .abbreviated, time: .shortened)) - \(end.formatted(date: .omitted, time: .shortened))"
+    }
+
+    private func locationText(for window: ShootingWindow) -> String {
+        "\(window.location.name), \(window.location.city), \(window.location.country)"
     }
 
     private func loadExistingFeedback(for window: ShootingWindow) async {

@@ -48,6 +48,21 @@ enum ShootingEventSourceType: String, CaseIterable, Identifiable, Codable, Hasha
     case userGenerated
 
     var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .mock:
+            return "内置示例"
+        case .weatherAPI:
+            return "天气数据"
+        case .aviationAPI:
+            return "航空数据"
+        case .astronomyAPI:
+            return "天文数据"
+        case .userGenerated:
+            return "用户创建"
+        }
+    }
 }
 
 enum EventImportanceLevel: String, CaseIterable, Identifiable, Codable, Hashable {

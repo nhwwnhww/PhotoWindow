@@ -19,6 +19,7 @@ final class AppDependencyContainer: ObservableObject {
     let notificationService: any NotificationServicing
     let analyticsService: any AnalyticsServicing
     let locationSearchService: any LocationSearchServicing
+    let calendarExportService: CalendarExportService
 
     init(
         shootingWindowRepository: any ShootingWindowRepository,
@@ -36,7 +37,8 @@ final class AppDependencyContainer: ObservableObject {
         userRepository: any UserRepository,
         notificationService: any NotificationServicing,
         analyticsService: any AnalyticsServicing,
-        locationSearchService: any LocationSearchServicing
+        locationSearchService: any LocationSearchServicing,
+        calendarExportService: CalendarExportService
     ) {
         self.shootingWindowRepository = shootingWindowRepository
         self.savedLocationRepository = savedLocationRepository
@@ -54,6 +56,7 @@ final class AppDependencyContainer: ObservableObject {
         self.notificationService = notificationService
         self.analyticsService = analyticsService
         self.locationSearchService = locationSearchService
+        self.calendarExportService = calendarExportService
     }
 
     static func mock() -> AppDependencyContainer {
@@ -94,7 +97,8 @@ final class AppDependencyContainer: ObservableObject {
             analyticsService: AnalyticsService(),
             locationSearchService: RemoteLocationSearchService(
                 fallbackService: LocationSearchService()
-            )
+            ),
+            calendarExportService: CalendarExportService()
         )
     }
 }

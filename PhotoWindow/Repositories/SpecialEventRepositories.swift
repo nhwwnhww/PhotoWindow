@@ -172,6 +172,7 @@ final class RemoteSpecialEventRepository: SpecialEventRepository {
         var sourceType: String
         var sourceName: String
         var sourceURL: String?
+        var shareURL: String?
         var status: String?
         var lastUpdated: String
         var createdAt: String
@@ -392,6 +393,7 @@ final class RemoteSpecialEventRepository: SpecialEventRepository {
             sourceType: sourceType,
             sourceName: dto.sourceName,
             sourceURL: dto.sourceURL,
+            shareURL: dto.shareURL,
             lastUpdated: lastUpdated,
             createdAt: createdAt
         )

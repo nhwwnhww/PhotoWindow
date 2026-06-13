@@ -91,6 +91,6 @@ final class AnalyticsService: AnalyticsServicing {
             "score=\(event.score.map(String.init) ?? "-")",
             "scoreLevel=\(event.scoreLevel?.rawValue ?? "-")"
         ]
-        print("[PhotoWindow Analytics] \(parts.joined(separator: " "))")
+        print("[photochaser Analytics] \(parts.joined(separator: " "))")
     }
 }

@@ -206,3 +206,11 @@ xcrun simctl launch booted com.photowindow.app
 ## 参考
 
 - [MVP_CHECKLIST.md](MVP_CHECKLIST.md)：规格覆盖与验收证据。
+
+## v1.2 计划分享与地图选点（当前进展）
+
+- 添加“地图选点”到地点编辑流程：新增 `MapLocationPickerView`，支持长按/拖拽设置经纬度；选点会同步更新坐标并回填地点信息。
+- 位置反查链路升级为“远程优先 + 本地 fallback”，并增加 `LocationDebugStateStore` 记录“当前坐标 / 最近逆地理成功与失败结果”。
+- 窗口与特殊事件详情页支持“加入系统日历”、分享拍摄计划卡片、复制计划文本。
+- 新增日历与分享调试可观测性：`CalendarShareDebugStateStore` + `DataDebugView` 展示最近日历权限、日历导出和分享链接状态。
+- 与前述功能联动，`DataDebugView` 继续保留 API 健康检查、远程/缓存/数据源状态和特殊事件诊断能力。

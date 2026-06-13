@@ -79,7 +79,7 @@ struct ExploreLocationsView: View {
             sectionTitle("所有保存地点")
 
             if viewModel.filteredSavedLocations.isEmpty {
-                emptyState("添加你的第一个拍摄地点，PhotoWindow 会帮你寻找最佳拍摄时间。")
+                emptyState("添加你的第一个拍摄地点，photochaser 会帮你寻找最佳拍摄时间。")
             } else {
                 ForEach(viewModel.filteredSavedLocations) { location in
                     locationLink(location)

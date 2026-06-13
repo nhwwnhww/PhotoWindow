@@ -38,6 +38,9 @@
 		A00000000000000000000066 /* NotificationQualityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000069 /* NotificationQualityService.swift */; };
 		A00000000000000000000043 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000043 /* AnalyticsService.swift */; };
 		A00000000000000000000046 /* LocationSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000046 /* LocationSearchService.swift */; };
+		A00000000000000000000068 /* LocationDebugStateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000071 /* LocationDebugStateStore.swift */; };
+		A00000000000000000000070 /* CalendarExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000073 /* CalendarExportService.swift */; };
+		A00000000000000000000071 /* SharePlanService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000074 /* SharePlanService.swift */; };
 		A00000000000000000000015 /* AppDependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000015 /* AppDependencyContainer.swift */; };
 		A00000000000000000000016 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000016 /* HomeViewModel.swift */; };
 		A00000000000000000000017 /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000017 /* CategoryViewModel.swift */; };
@@ -67,6 +70,8 @@
 		A00000000000000000000040 /* UpcomingNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000040 /* UpcomingNotificationsView.swift */; };
 		A00000000000000000000045 /* DebugNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000045 /* DebugNotificationView.swift */; };
 		A00000000000000000000049 /* AddLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000049 /* AddLocationView.swift */; };
+		A00000000000000000000069 /* MapLocationPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000072 /* MapLocationPickerView.swift */; };
+		A00000000000000000000072 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000075 /* ShareSheet.swift */; };
 		A00000000000000000000050 /* LocationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000051 /* LocationDetailView.swift */; };
 		A00000000000000000000057 /* SpecialEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000058 /* SpecialEventsView.swift */; };
 		A00000000000000000000058 /* SpecialEventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000059 /* SpecialEventDetailView.swift */; };
@@ -118,6 +123,9 @@
 		B00000000000000000000064 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		B00000000000000000000068 /* ScoringRuleConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringRuleConfigService.swift; sourceTree = "<group>"; };
 		B00000000000000000000069 /* NotificationQualityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationQualityService.swift; sourceTree = "<group>"; };
+		B00000000000000000000071 /* LocationDebugStateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDebugStateStore.swift; sourceTree = "<group>"; };
+		B00000000000000000000073 /* CalendarExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarExportService.swift; sourceTree = "<group>"; };
+		B00000000000000000000074 /* SharePlanService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePlanService.swift; sourceTree = "<group>"; };
 		B00000000000000000000043 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		B00000000000000000000046 /* LocationSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchService.swift; sourceTree = "<group>"; };
 		B00000000000000000000015 /* AppDependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencyContainer.swift; sourceTree = "<group>"; };
@@ -153,6 +161,8 @@
 		B00000000000000000000058 /* SpecialEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialEventsView.swift; sourceTree = "<group>"; };
 		B00000000000000000000059 /* SpecialEventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialEventDetailView.swift; sourceTree = "<group>"; };
 		B00000000000000000000066 /* DataDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDebugView.swift; sourceTree = "<group>"; };
+		B00000000000000000000072 /* MapLocationPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLocationPickerView.swift; sourceTree = "<group>"; };
+		B00000000000000000000075 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		B00000000000000000000032 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B00000000000000000000062 /* Info-Debug.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-Debug.plist"; sourceTree = "<group>"; };
 		B00000000000000000000063 /* Info-Release.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-Release.plist"; sourceTree = "<group>"; };
@@ -264,6 +274,9 @@
 				B00000000000000000000069 /* NotificationQualityService.swift */,
 				B00000000000000000000043 /* AnalyticsService.swift */,
 				B00000000000000000000046 /* LocationSearchService.swift */,
+				B00000000000000000000071 /* LocationDebugStateStore.swift */,
+				B00000000000000000000073 /* CalendarExportService.swift */,
+				B00000000000000000000074 /* SharePlanService.swift */,
 				B00000000000000000000013 /* MockDataService.swift */,
 				B00000000000000000000014 /* NotificationService.swift */,
 			);
@@ -305,6 +318,8 @@
 				B00000000000000000000040 /* UpcomingNotificationsView.swift */,
 				B00000000000000000000045 /* DebugNotificationView.swift */,
 				B00000000000000000000049 /* AddLocationView.swift */,
+				B00000000000000000000072 /* MapLocationPickerView.swift */,
+				B00000000000000000000075 /* ShareSheet.swift */,
 				B00000000000000000000051 /* LocationDetailView.swift */,
 				B00000000000000000000058 /* SpecialEventsView.swift */,
 				B00000000000000000000059 /* SpecialEventDetailView.swift */,
@@ -473,6 +488,9 @@
 				A00000000000000000000066 /* NotificationQualityService.swift in Sources */,
 				A00000000000000000000043 /* AnalyticsService.swift in Sources */,
 				A00000000000000000000046 /* LocationSearchService.swift in Sources */,
+				A00000000000000000000068 /* LocationDebugStateStore.swift in Sources */,
+				A00000000000000000000070 /* CalendarExportService.swift in Sources */,
+				A00000000000000000000071 /* SharePlanService.swift in Sources */,
 				A00000000000000000000013 /* MockDataService.swift in Sources */,
 				A00000000000000000000014 /* NotificationService.swift in Sources */,
 				A00000000000000000000015 /* AppDependencyContainer.swift in Sources */,
@@ -504,6 +522,8 @@
 				A00000000000000000000040 /* UpcomingNotificationsView.swift in Sources */,
 				A00000000000000000000045 /* DebugNotificationView.swift in Sources */,
 				A00000000000000000000049 /* AddLocationView.swift in Sources */,
+				A00000000000000000000069 /* MapLocationPickerView.swift in Sources */,
+				A00000000000000000000072 /* ShareSheet.swift in Sources */,
 				A00000000000000000000050 /* LocationDetailView.swift in Sources */,
 				A00000000000000000000057 /* SpecialEventsView.swift in Sources */,
 				A00000000000000000000058 /* SpecialEventDetailView.swift in Sources */,
@@ -654,6 +674,7 @@
 		C00000000000000000000003 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -680,6 +701,7 @@
 		C00000000000000000000004 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
