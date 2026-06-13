@@ -13,6 +13,8 @@ struct DataDebugView: View {
                 header
                 environmentSection
                 diagnosticsSection
+                apiDiagnosticsSection
+                aviationDiagnosticsSection
                 cacheSection
                 recommendationDiagnosticsSection
                 notificationDiagnosticsSection
@@ -103,11 +105,53 @@ struct DataDebugView: View {
             detailRow("dataSource", viewModel.dataSource.displayName)
             detailRow("syncState", viewModel.syncState.displayName)
             detailRow("dataVersion", viewModel.dataVersion ?? "-")
-            detailRow("loaded event count", "\(viewModel.eventCount)")
+            detailRow("event count", "\(viewModel.eventCount)")
             detailRow("last remote fetch", format(viewModel.lastRemoteFetchTime))
             detailRow("last successful fetch", format(viewModel.lastSuccessfulFetchTime))
             detailRow("last error", viewModel.lastError ?? "-")
             detailRow("skipped invalid events", "\(viewModel.skippedInvalidEventCount)")
+        }
+        .photoCardStyle()
+    }
+
+    private var apiDiagnosticsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("API 诊断")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(.white)
+
+            Button {
+                Task { await viewModel.runAPIDiagnostics() }
+            } label: {
+                Label(viewModel.isCheckingAPI ? "诊断中" : "检查 public API", systemImage: "stethoscope")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .tint(Color.photoAccent)
+            .disabled(viewModel.isLoading || viewModel.isCheckingAPI)
+
+            if viewModel.apiDiagnostics.isEmpty {
+                Text("尚未运行 API 诊断。")
+                    .font(.caption)
+                    .foregroundStyle(Color.photoMutedText)
+            } else {
+                ForEach(viewModel.apiDiagnostics) { result in
+                    apiDiagnosticRow(result)
+                }
+            }
+        }
+        .photoCardStyle()
+    }
+
+    private var aviationDiagnosticsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("aviationAPI")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(.white)
+
+            detailRow("aviation event count", "\(viewModel.aviationEventCount)")
+            detailRow("lastUpdated", format(viewModel.aviationLastUpdated))
+            detailRow("last error", viewModel.aviationLastError ?? "-")
         }
         .photoCardStyle()
     }
@@ -219,6 +263,40 @@ struct DataDebugView: View {
                 .multilineTextAlignment(.trailing)
                 .textSelection(.enabled)
         }
+    }
+
+    private func apiDiagnosticRow(_ result: APIDiagnosticResult) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: result.isSuccess ? "checkmark.circle.fill" : "xmark.octagon.fill")
+                .foregroundStyle(result.isSuccess ? Color.photoAccent : .red)
+                .frame(width: 18)
+
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 6) {
+                    Text(result.endpointName)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.white)
+                    if let statusCode = result.statusCode {
+                        Text("\(statusCode)")
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(Color.photoMutedText)
+                    }
+                }
+
+                Text(result.path)
+                    .font(.caption2)
+                    .foregroundStyle(Color.photoMutedText)
+                    .textSelection(.enabled)
+
+                Text(result.summary)
+                    .font(.caption)
+                    .foregroundStyle(result.isSuccess ? Color.photoMutedText : .red.opacity(0.92))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding(.vertical, 4)
     }
 
     private func format(_ date: Date?) -> String {

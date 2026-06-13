@@ -92,7 +92,9 @@ final class AppDependencyContainer: ObservableObject {
             userRepository: MockUserRepository(store: store),
             notificationService: NotificationService(),
             analyticsService: AnalyticsService(),
-            locationSearchService: LocationSearchService()
+            locationSearchService: RemoteLocationSearchService(
+                fallbackService: LocationSearchService()
+            )
         )
     }
 }

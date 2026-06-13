@@ -172,6 +172,7 @@ final class RemoteSpecialEventRepository: SpecialEventRepository {
         var sourceType: String
         var sourceName: String
         var sourceURL: String?
+        var status: String?
         var lastUpdated: String
         var createdAt: String
     }
@@ -353,6 +354,11 @@ final class RemoteSpecialEventRepository: SpecialEventRepository {
         }
         guard let confidenceLevel = SpecialEventConfidenceLevel(rawValue: dto.confidenceLevel) else {
             throw APIError.validationFailed(["invalid confidenceLevel \(dto.confidenceLevel)"])
+        }
+        if let status = dto.status?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !status.isEmpty,
+           status.lowercased() != "published" {
+            throw APIError.validationFailed(["event status \(status) is not published"])
         }
         let sourceType = SpecialEventSourceType(rawValue: dto.sourceType) ?? .mock
         guard let startTime = parseDate(dto.startTime),

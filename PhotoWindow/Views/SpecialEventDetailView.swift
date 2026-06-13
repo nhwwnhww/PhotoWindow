@@ -15,6 +15,8 @@ struct SpecialEventDetailView: View {
                     actionButtons
                     recommendationSection
                     metadataSection(event)
+                    sourceSection(event)
+                    aviationNotice(event)
                     tagsSection(event)
                     associatedWindowSection
                 }
@@ -130,12 +132,42 @@ struct SpecialEventDetailView: View {
             detailRow("时间", viewModel.eventTimeText)
             detailRow("重要程度", "\(event.importanceLevel.displayName) · \(event.importanceLevel.rawValue)")
             detailRow("可信度", "\(event.confidenceLevel.displayName) · \(event.confidenceLevel.rawValue)")
-            detailRow("来源类型", "\(event.sourceType.displayName) · \(event.sourceType.rawValue)")
-            detailRow("来源", event.sourceName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "-" : event.sourceName)
-            sourceURLRow(event.sourceURL)
-            detailRow("数据更新", viewModel.sourceUpdatedText)
         }
         .photoCardStyle()
+    }
+
+    private func sourceSection(_ event: SpecialEvent) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("数据来源")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(.white)
+
+            detailRow("sourceType", "\(event.sourceType.displayName) · \(event.sourceType.rawValue)")
+            detailRow("sourceName", event.sourceName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "-" : event.sourceName)
+            sourceURLRow(event.sourceURL, title: "sourceURL")
+            detailRow("lastUpdated", viewModel.sourceUpdatedText)
+
+            if event.tags.isEmpty {
+                detailRow("tags", "-")
+            } else {
+                Text("tags")
+                    .font(.subheadline)
+                    .foregroundStyle(Color.photoMutedText)
+                ReasonTagChips(tags: event.tags)
+            }
+        }
+        .photoCardStyle()
+    }
+
+    @ViewBuilder
+    private func aviationNotice(_ event: SpecialEvent) -> some View {
+        if event.sourceType == .aviationAPI {
+            Label("该航空事件由实时航迹数据推导，拍摄前建议确认航班状态和机场风向。", systemImage: "airplane.departure")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Color.photoAccent)
+                .fixedSize(horizontal: false, vertical: true)
+                .photoCardStyle()
+        }
     }
 
     private func tagsSection(_ event: SpecialEvent) -> some View {
@@ -185,13 +217,13 @@ struct SpecialEventDetailView: View {
     }
 
     @ViewBuilder
-    private func sourceURLRow(_ sourceURL: String?) -> some View {
+    private func sourceURLRow(_ sourceURL: String?, title: String = "来源链接") -> some View {
         let trimmed = sourceURL?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         if trimmed.isEmpty {
-            detailRow("来源链接", "-")
+            detailRow(title, "-")
         } else if let url = URL(string: trimmed) {
             HStack(alignment: .top) {
-                Text("来源链接")
+                Text(title)
                     .font(.subheadline)
                     .foregroundStyle(Color.photoMutedText)
                 Spacer(minLength: 12)
@@ -201,7 +233,7 @@ struct SpecialEventDetailView: View {
                     .multilineTextAlignment(.trailing)
             }
         } else {
-            detailRow("来源链接", trimmed)
+            detailRow(title, trimmed)
         }
     }
 }

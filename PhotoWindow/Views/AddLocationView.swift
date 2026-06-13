@@ -239,6 +239,12 @@ struct AddLocationView: View {
                 Text("\(location.city), \(location.country)")
                     .font(.caption)
                     .foregroundStyle(Color.photoMutedText)
+                Text("lat \(String(format: "%.5f", location.latitude)) / lon \(String(format: "%.5f", location.longitude))")
+                    .font(.caption2)
+                    .foregroundStyle(Color.photoMutedText)
+                Label("建议类型：\(location.locationType.displayName)", systemImage: location.locationType.iconName)
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(Color.photoAccent)
             }
 
             Spacer()

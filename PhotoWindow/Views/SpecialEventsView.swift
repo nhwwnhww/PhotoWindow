@@ -162,16 +162,7 @@ struct SpecialEventRow: View {
             .font(.caption)
             .foregroundStyle(Color.photoMutedText)
 
-            HStack(spacing: 8) {
-                SpecialEventSourceBadge(sourceType: event.sourceType)
-                if !event.sourceName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    Text(event.sourceName)
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Color.photoMutedText)
-                        .lineLimit(1)
-                }
-                Spacer(minLength: 0)
-            }
+            SpecialEventSourceSummary(event: event)
 
             if let watchlistHitText {
                 Label(watchlistHitText, systemImage: "scope")
@@ -211,6 +202,28 @@ struct SpecialEventSourceBadge: View {
             .padding(.vertical, 4)
             .background(Color.photoAccent.opacity(0.12))
             .clipShape(Capsule())
+    }
+}
+
+struct SpecialEventSourceSummary: View {
+    let event: SpecialEvent
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            SpecialEventSourceBadge(sourceType: event.sourceType)
+
+            Label("sourceType：\(event.sourceType.displayName)", systemImage: "tray.full")
+            Label("confidenceLevel：\(event.confidenceLevel.displayName) · importanceLevel：\(event.importanceLevel.displayName)", systemImage: "checkmark.shield")
+            Label("sourceName：\(sourceName.isEmpty ? "-" : sourceName)", systemImage: "building.2")
+            Label("lastUpdated：\(event.lastUpdated.formatted(date: .abbreviated, time: .shortened))", systemImage: "clock.arrow.circlepath")
+        }
+        .font(.caption2.weight(.semibold))
+        .foregroundStyle(Color.photoMutedText)
+        .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var sourceName: String {
+        event.sourceName.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 

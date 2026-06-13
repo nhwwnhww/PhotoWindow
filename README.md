@@ -21,6 +21,7 @@ PhotoWindow 是一个摄影事件提醒类 iOS MVP 原型。第一版聚焦“�
 - v0.7 支持从事件服务器拉取 special events，成功后缓存到本地，服务器不可用时自动使用离线缓存或内置 JSON。
 - v0.8 / v0.9 server 已拆分到独立仓库；当前仓库只维护 iOS App，App 继续通过统一 API envelope 读取 metadata、special events 和 incremental sync。
 - v0.9 支持 iOS API 环境切换、NetworkClient、文件缓存、增量 sync、DataDebugView 和 fallback 状态展示。
+- v1.1 新增：SpecialEvent 字段解码兼容性增强、航空来源展示与定位：支持 sourceType 显示/中文映射、confidenceLevel、importanceLevel、sourceName/URL/更新时间在列表和详情中展示；地点搜索改为服务器代理 `/api/v1/locations/search` 与 `/api/v1/locations/reverse`，不可用时自动回退 mock。
 - v1.0 Beta Candidate 支持推荐解释 `RecommendationResult`、分类评分权重 `scoring_rules.json`、提醒质量控制、勿扰时段、每日最大提醒数、正式 onboarding，以及 Admin 事件推荐预览。
 - Repository 协议已预留，当前实现为 in-memory mock 与 UserDefaults 本地保存，后续可替换为 Supabase、Firebase 或自建后端。
 
@@ -118,6 +119,7 @@ xcrun simctl launch booted com.photowindow.app
 - `SpecialEventRepository` 提供统一协议，当前实现包括 `LocalJSONSpecialEventRepository` 和 `MockSpecialEventRepository`；`RemoteJSONSpecialEventRepository` / `APISpecialEventRepository` 作为未来真实数据源占位。
 - `PhotoWindow/Resources/special_events_seed.json` 是 MVP 本地事件库，包含 Brisbane Airport 特殊涂装、A380、Lake Moogerah 流星雨/银河、UQ Graduation、South Bank 火烧云、Kangaroo Point 清晨低雾和 City 蓝调夜景窗口。
 - `SpecialEventConfidenceLevel` 支持 low / medium / high；`importanceLevel` 继续复用 `EventImportanceLevel`：normal、worthWatching、rare、mustShoot。
+- `SpecialEvent` 解码适配 server 新增字段，新增 `status`/`qualityScore`/`qualityReasons` 不影响解析，`published` 以外事件会在客户端按规则过滤显示。
 - `SpecialEventDeduplicationService` 使用地点、类别、时间重叠、标题和 tags 相似度做 MVP 去重，并保留重要程度更高、可信度更高、更新时间更新的事件。
 - `SpecialEventIngestionService` 从 repository 获取事件，按地点 / 类别 / 时间过滤，并把事件转换成 `ShootingEvent` 供 `ShootingWindowGenerationService` 使用。
 - `ShootingWindowGenerationService` 支持 `SpecialEvent + WeatherSnapshot + AstronomySnapshot` 直接生成事件驱动窗口；rare / mustShoot 会提高评分，low confidence 会降低评分，reason tags 会加入特殊涂装、A380、流星雨、毕业季、火烧云可能、清晨低雾等事件原因。
@@ -186,6 +188,7 @@ xcrun simctl launch booted com.photowindow.app
 - `ShootingLocation` 增加收藏状态、适合类别、创建/更新时间，并支持 `portraitSpot` 和 `custom` 地点类型。
 - `SavedLocationRepository` 使用 UserDefaults + Codable 保存用户地点，支持新增、更新、删除、收藏切换和收藏地点查询；协议边界可替换为 Supabase、Firebase 或自建后端。
 - `LocationSearchService` 预留搜索、反向地理编码和当前位置接口；MVP 当前用 mock 搜索结果，定位不可用时可手动输入经纬度。
+- `LocationSearchService` 现已接入服务器代理：`/api/v1/locations/search` 与 `/api/v1/locations/reverse`，搜索和反查优先走公开 API，失败时回退本地 mock 并保留现有手输/当前定位工作流。
 - `AddLocationView` 支持搜索地点、使用当前位置、手动经纬度、自定义名称、地点类型、适合类别、光污染等级、备注和保存。
 - `LocationDetailView` 展示地点信息、收藏状态、适合类别、未来 7 天最佳拍摄窗口、已开启提醒规则和备注；可编辑、删除、收藏或为地点创建提醒规则。
 - `ExploreLocationsView` 升级为“我的收藏地点 / 所有保存地点 / 添加地点 / 地点类型筛选”的管理入口。
