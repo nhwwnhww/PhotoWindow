@@ -354,9 +354,7 @@ final class RemoteSpecialEventRepository: SpecialEventRepository {
         guard let confidenceLevel = SpecialEventConfidenceLevel(rawValue: dto.confidenceLevel) else {
             throw APIError.validationFailed(["invalid confidenceLevel \(dto.confidenceLevel)"])
         }
-        guard let sourceType = SpecialEventSourceType(rawValue: dto.sourceType) else {
-            throw APIError.validationFailed(["invalid sourceType \(dto.sourceType)"])
-        }
+        let sourceType = SpecialEventSourceType(rawValue: dto.sourceType) ?? .mock
         guard let startTime = parseDate(dto.startTime),
               let endTime = parseDate(dto.endTime),
               let lastUpdated = parseDate(dto.lastUpdated),

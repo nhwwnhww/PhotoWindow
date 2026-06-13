@@ -18,9 +18,9 @@ PhotoWindow 是一个摄影事件提醒类 iOS MVP 原型。第一版聚焦“�
 - v0.4 支持内测反馈、本地基础埋点和提醒可靠性测试。
 - v0.5 支持自定义地点、地点级拍摄窗口和地点级提醒规则。
 - v0.6 支持特殊事件数据源层、本地 JSON 事件库、事件去重、可信度和特殊事件驱动的 ShootingWindow。
-- v0.7 支持从本地 Node/Express 事件服务器拉取 special events，成功后缓存到本地，服务器不可用时自动使用离线缓存或内置 JSON。
-- v0.8 支持本地特殊事件运营后台 `/admin`，可通过网页新增、编辑、删除、发布、下线和复制事件。
-- v0.9 支持 server Docker 部署准备、统一 API response、metadata、增量 sync、文件缓存、DataDebugView、环境变量配置、持久化 data/logs、CORS、增强 health、备份回滚，以及 iOS API 环境切换。
+- v0.7 支持从事件服务器拉取 special events，成功后缓存到本地，服务器不可用时自动使用离线缓存或内置 JSON。
+- v0.8 / v0.9 server 已拆分到独立仓库；当前仓库只维护 iOS App，App 继续通过统一 API envelope 读取 metadata、special events 和 incremental sync。
+- v0.9 支持 iOS API 环境切换、NetworkClient、文件缓存、增量 sync、DataDebugView 和 fallback 状态展示。
 - v1.0 Beta Candidate 支持推荐解释 `RecommendationResult`、分类评分权重 `scoring_rules.json`、提醒质量控制、勿扰时段、每日最大提醒数、正式 onboarding，以及 Admin 事件推荐预览。
 - Repository 协议已预留，当前实现为 in-memory mock 与 UserDefaults 本地保存，后续可替换为 Supabase、Firebase 或自建后端。
 
@@ -36,31 +36,30 @@ PhotoWindow 是一个摄影事件提醒类 iOS MVP 原型。第一版聚焦“�
 3. 打开 `PhotoWindow.xcodeproj`。
 4. 选择 `PhotoWindow` scheme 和 iOS 17+ 模拟器运行。
 
-v0.9 默认会尝试读取本地事件服务器：
+iOS App 默认使用已部署的公网事件服务器：
 
-```bash
-cd server
-npm install
-npm run dev
+```text
+http://152.67.112.15:15176
 ```
 
-iOS Simulator 默认使用 `localSimulator`，也就是 `http://localhost:3000`。真机调试使用 `localNetwork`，可以在“偏好 → 数据调试”里切到 `custom` 并输入电脑局域网 IP，例如 `http://192.168.1.20:3000`。
+server 端已经独立维护；本仓库不再包含 `/server`。如果要回到本机开发，可以在“偏好 → 数据调试”里切到 `localSimulator`、`localNetwork` 或 `custom`。iOS Simulator 使用 `localSimulator`，也就是 `http://localhost:3000`。真机局域网调试可以用 `custom` 输入电脑局域网 IP，例如 `http://192.168.1.20:3000`。
 
 可在 Xcode scheme 的 Environment Variables 中设置：
 
 ```text
-PHOTOWINDOW_API_ENVIRONMENT=localNetwork
-PHOTOWINDOW_API_BASE_URL=http://192.168.1.20:3000
+PHOTOWINDOW_API_ENVIRONMENT=publicServer
+PHOTOWINDOW_API_BASE_URL=http://152.67.112.15:15176
 PHOTOWINDOW_USE_REMOTE_SPECIAL_EVENTS=true
 ```
 
 支持的 API 环境：
 
+- `publicServer`: `http://152.67.112.15:15176`
 - `localSimulator`: `http://localhost:3000`
 - `localNetwork`: `http://192.168.1.100:3000`
 - `custom`: 在 DataDebugView 或 Xcode environment variable 中输入任意 baseURL
 
-Debug 阶段可以使用本地 HTTP；Release/线上环境应使用 HTTPS。
+Debug 阶段允许访问 HTTP 公网事件服务器；Release/线上环境应使用 HTTPS。
 
 项目已包含共享 `PhotoWindow` scheme。当前开发环境已在 Xcode 26.3 / iOS Simulator 26.3 下验证。可运行：
 
@@ -126,31 +125,29 @@ xcrun simctl launch booted com.photowindow.app
 - `SpecialEventsView` 按 Today / Tomorrow / This Week 展示未来特殊事件，`SpecialEventDetailView` 展示来源、更新时间、推荐理由、tags、关联 ShootingWindow、提醒和收藏。
 - `AlertMatchingService` 支持用事件 title / description / tags 匹配用户 watchlist keywords，并避免同一事件重复生成提醒；特殊事件通知文案会显示“必拍事件 / 稀有事件 / 特殊事件”。
 
-## v0.7 本地特殊事件服务器
+## v0.7 远程特殊事件数据
 
-- `/server` 是独立 Node.js + Express 本地数据源，提供 `/health`、`/api/v1/special-events`、`/api/v1/special-events/:id` 和 `/api/v1/config`。
+- server 端已从本仓库拆分；iOS App 只依赖已配置 baseURL 的公开接口，不在 App 内直接请求第三方数据源。
 - `NetworkClient` 是统一网络层，支持 baseURL、timeout、GET、统一 API envelope decoding 和 `APIError` 分类。
 - `RemoteSpecialEventRepository` 使用 `NetworkClient` 从 server 拉取事件 JSON，支持 `fetchSpecialEvents`、category/location 过滤、`fetchMetadata` 和 `syncSpecialEvents(since:)`。
 - `SpecialEventCacheService` 使用 FileManager 缓存到 `Application Support / PhotoWindowCache / special_events_cache.json`，缓存 events、dataVersion、lastUpdated、cachedAt 和 source。
 - `SpecialEventSyncService` 是 App 的事件数据入口：先读缓存给 UI，再请求 metadata；dataVersion 变化时全量 fetch，dataVersion 相同但 lastUpdated 更新时调用 sync 增量合并 updated/deleted。
 - `SpecialEventDataValidator` 会在 iOS 端轻量校验事件；单条坏数据会跳过并记录 skipped count，不让整个 App 崩溃。
 - 远程连接失败时，首页会显示“无法连接事件服务器，当前使用离线缓存。”，并自动使用离线缓存；没有缓存时 fallback 到 `LocalJSONSpecialEventRepository` 的内置示例数据。
-- `HomeView` 和 `SpecialEventsView` 会显示“事件数据来自：本地服务器 / 离线缓存 / 内置示例数据 / Mock 数据”。
+- `HomeView` 和 `SpecialEventsView` 会显示“事件数据来自：事件服务器 / 离线缓存 / 内置示例数据 / Mock 数据”。
 - Debug 配置允许本地 HTTP 开发请求。正式部署时应使用 HTTPS，并移除开发阶段的 App Transport Security 本地 HTTP 例外。
 
-## v0.8 / v0.9 Server 与 API 环境
+## v0.8 / v0.9 API 环境与同步
 
-- `/server/admin` 是本地事件运营后台，可管理事件发布状态；iOS App 只读取已发布且未删除事件。
+- 事件运营后台和真实数据源接入在独立 server 仓库维护；iOS App 只读取已发布且未删除事件。
 - 公开 API 使用统一 response envelope：`data`、`meta`、`error`。
 - `/api/v1/special-events` 支持 `limit`、`offset`、`sort=startTime`、`sort=-startTime`，并返回 count/total/dataVersion/lastUpdated。
 - `/api/v1/special-events/sync?since=...` 返回 since 之后 updated events 和 deleted event ids。
 - `/api/v1/metadata` 返回 eventDataVersion、lastUpdated、eventCount、publishedEventCount 和 serverTime。
-- Server 数据文件默认在 `server/data/special_events.json`，备份在 `server/data/backups/`，日志在 `server/logs/app.log`。
-- Server 支持 Docker：`cd server && docker compose up -d`。
 - `APIConfig.current` 根据 `PHOTOWINDOW_API_ENVIRONMENT` 和 `PHOTOWINDOW_API_BASE_URL` 选择环境。
 - fallback 逻辑保持不变：远程成功使用 `remoteServer`，server 失败使用 `localCache`，没有缓存时使用 `bundledJSON`，最后才用 `mock`。
-- UI 继续显示当前事件数据来源：本地服务器、离线缓存、内置示例数据或 Mock 数据。
-- `DataDebugView` 可从“偏好 → 数据调试”进入，查看 current environment、baseURL、dataSource、dataVersion、cache event count、last remote fetch、last successful fetch、last error、skipped invalid event count 和 cache file path，也可以手动刷新、清空缓存、重新加载 bundled JSON。
+- UI 继续显示当前事件数据来源：事件服务器、离线缓存、内置示例数据或 Mock 数据。
+- `DataDebugView` 可从“偏好 → 数据调试”进入，查看 current environment、baseURL、dataSource、dataVersion、cache event count、last remote fetch、last successful fetch、last error、skipped invalid event count 和 cache file path，也可以刷新远程事件数据、清空缓存后重新拉取、重新加载 bundled JSON。
 
 ## v1.0 Beta Candidate 推荐与提醒质量
 
@@ -163,7 +160,7 @@ xcrun simctl launch booted com.photowindow.app
 - 偏好页升级为最多 5 步 onboarding：选择主要摄影类别、选择常用地点、设置最低推荐分数、设置提醒偏好、请求通知权限；任一步可跳过，保存后写入本地偏好并同步提醒规则。
 - 首页卡片显示评分等级、可信度、top 3 推荐原因和特殊事件 badge；窗口详情页显示推荐原因、扣分原因、风险提示、适合人群、建议到场时间和是否建议开启提醒。
 - `SpecialEventsView` 显示 importance、confidence 和轻量推荐预览，帮助判断事件发布后的推荐倾向。
-- server 新增 `POST /api/v1/admin/preview/special-event`，后台表单的 `Preview` 按钮会校验 draft 并返回预计评分、推荐原因、扣分原因、是否触发提醒、建议提醒时间和命中的 watchlist 关键词。该预览是本地运营用的简化评分，不替代 iOS 端完整推荐算法。
+- 独立 server 提供 `POST /api/v1/admin/preview/special-event`，后台表单的 `Preview` 按钮会校验 draft 并返回预计评分、推荐原因、扣分原因、是否触发提醒、建议提醒时间和命中的 watchlist 关键词。该预览是运营用的简化评分，不替代 iOS 端完整推荐算法。
 
 ## v0.3 个性化订阅与自动提醒
 
@@ -199,7 +196,7 @@ xcrun simctl launch booted com.photowindow.app
 ## 后续迭代方向
 
 - 接入 Supabase 或 Firebase，并替换 mock repositories。
-- 接入天气、天文和航空数据源，按地点和日期缓存事件。
+- 在独立 server 端接入天气、天文、航空和日历数据源；iOS App 只读取 server 聚合后的 special events。
 - 增加 MapKit 地点选择。
 - 增加日历导出、分享事件卡片和更多自定义提醒规则。
 

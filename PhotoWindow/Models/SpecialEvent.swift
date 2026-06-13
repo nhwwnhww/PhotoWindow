@@ -46,28 +46,42 @@ enum SpecialEventSourceType: String, CaseIterable, Identifiable, Codable, Hashab
     case curatedJSON
     case weatherDerived
     case astronomyCalendar
+    case curatedCalendar
     case aviationAPI
     case userSubmitted
     case mock
 
     var id: String { rawValue }
 
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        self = SpecialEventSourceType(rawValue: rawValue) ?? .mock
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
+
     var displayName: String {
         switch self {
         case .systemGenerated:
             return "系统预测"
         case .curatedJSON:
-            return "本地精选 JSON"
+            return "人工精选"
         case .weatherDerived:
             return "天气推导"
         case .astronomyCalendar:
             return "天文日历"
+        case .curatedCalendar:
+            return "精选日历"
         case .aviationAPI:
-            return "航空 API"
+            return "航空数据"
         case .userSubmitted:
             return "用户提交"
         case .mock:
-            return "Mock"
+            return "内置示例"
         }
     }
 
@@ -77,6 +91,8 @@ enum SpecialEventSourceType: String, CaseIterable, Identifiable, Codable, Hashab
             return .weatherAPI
         case .astronomyCalendar:
             return .astronomyAPI
+        case .curatedCalendar:
+            return .mock
         case .aviationAPI:
             return .aviationAPI
         case .userSubmitted:

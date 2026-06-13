@@ -88,6 +88,13 @@ final class DataDebugViewModel: ObservableObject {
         updateDiagnostics()
     }
 
+    func clearCacheAndRefresh() async {
+        isLoading = true
+        specialEventDataService.clearCache()
+        apply(await specialEventDataService.refreshEvents(), message: "Cache cleared. Remote refresh finished.")
+        isLoading = false
+    }
+
     func reloadBundledJSON() async {
         isLoading = true
         apply(await specialEventDataService.loadBundledJSON(), message: "Loaded bundled JSON.")

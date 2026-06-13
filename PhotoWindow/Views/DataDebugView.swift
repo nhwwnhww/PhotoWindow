@@ -70,7 +70,7 @@ struct DataDebugView: View {
             .pickerStyle(.segmented)
 
             if viewModel.selectedEnvironment == .custom {
-                TextField("http://192.168.1.100:3000", text: $viewModel.customBaseURL)
+                TextField("http://152.67.112.15:15176", text: $viewModel.customBaseURL)
                     .textInputAutocapitalization(.never)
                     .keyboardType(.URL)
                     .padding(10)
@@ -178,7 +178,7 @@ struct DataDebugView: View {
             Button {
                 Task { await viewModel.refresh() }
             } label: {
-                Label(viewModel.isLoading ? "刷新中" : "手动刷新", systemImage: "arrow.clockwise")
+                Label(viewModel.isLoading ? "刷新中" : "刷新远程事件数据", systemImage: "arrow.clockwise")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
@@ -186,13 +186,14 @@ struct DataDebugView: View {
             .disabled(viewModel.isLoading)
 
             Button {
-                viewModel.clearCache()
+                Task { await viewModel.clearCacheAndRefresh() }
             } label: {
-                Label("清空缓存", systemImage: "trash")
+                Label("清空缓存后重新拉取", systemImage: "trash")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
             .tint(.red)
+            .disabled(viewModel.isLoading)
 
             Button {
                 Task { await viewModel.reloadBundledJSON() }

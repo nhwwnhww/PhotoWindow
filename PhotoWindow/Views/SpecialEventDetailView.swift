@@ -131,7 +131,8 @@ struct SpecialEventDetailView: View {
             detailRow("重要程度", "\(event.importanceLevel.displayName) · \(event.importanceLevel.rawValue)")
             detailRow("可信度", "\(event.confidenceLevel.displayName) · \(event.confidenceLevel.rawValue)")
             detailRow("来源类型", "\(event.sourceType.displayName) · \(event.sourceType.rawValue)")
-            detailRow("来源", event.sourceName)
+            detailRow("来源", event.sourceName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "-" : event.sourceName)
+            sourceURLRow(event.sourceURL)
             detailRow("数据更新", viewModel.sourceUpdatedText)
         }
         .photoCardStyle()
@@ -180,6 +181,27 @@ struct SpecialEventDetailView: View {
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.white)
                 .multilineTextAlignment(.trailing)
+        }
+    }
+
+    @ViewBuilder
+    private func sourceURLRow(_ sourceURL: String?) -> some View {
+        let trimmed = sourceURL?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        if trimmed.isEmpty {
+            detailRow("来源链接", "-")
+        } else if let url = URL(string: trimmed) {
+            HStack(alignment: .top) {
+                Text("来源链接")
+                    .font(.subheadline)
+                    .foregroundStyle(Color.photoMutedText)
+                Spacer(minLength: 12)
+                Link(trimmed, destination: url)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.photoAccent)
+                    .multilineTextAlignment(.trailing)
+            }
+        } else {
+            detailRow("来源链接", trimmed)
         }
     }
 }

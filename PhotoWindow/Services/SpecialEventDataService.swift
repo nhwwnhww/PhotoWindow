@@ -1,6 +1,7 @@
 import Foundation
 
 enum APIEnvironment: String, CaseIterable, Codable, Hashable, Identifiable {
+    case publicServer
     case localSimulator
     case localNetwork
     case custom
@@ -9,6 +10,8 @@ enum APIEnvironment: String, CaseIterable, Codable, Hashable, Identifiable {
 
     var displayName: String {
         switch self {
+        case .publicServer:
+            return "Public Server"
         case .localSimulator:
             return "Local Simulator"
         case .localNetwork:
@@ -20,11 +23,19 @@ enum APIEnvironment: String, CaseIterable, Codable, Hashable, Identifiable {
 }
 
 struct APIConfig: Codable, Hashable {
+    static let publicServerBaseURL = URL(string: "http://152.67.112.15:15176")!
+
     var environment: APIEnvironment
     var baseURL: URL
     var useRemoteSpecialEvents: Bool
 
     var localServerBaseURL: URL { baseURL }
+
+    static let publicServer = APIConfig(
+        environment: .publicServer,
+        baseURL: publicServerBaseURL,
+        useRemoteSpecialEvents: true
+    )
 
     static let localSimulator = APIConfig(
         environment: .localSimulator,
@@ -54,7 +65,7 @@ struct APIConfig: Codable, Hashable {
             rawValue: processEnvironment["PHOTOWINDOW_API_ENVIRONMENT"]
                 ?? defaults.string(forKey: environmentKey)
                 ?? ""
-        ) ?? .localSimulator
+        ) ?? .publicServer
         let defaultConfig = config(for: selectedEnvironment)
         let baseURLString = processEnvironment["PHOTOWINDOW_API_BASE_URL"]
             ?? processEnvironment["PHOTOWINDOW_LOCAL_SERVER_BASE_URL"]
@@ -74,6 +85,8 @@ struct APIConfig: Codable, Hashable {
 
     static func config(for environment: APIEnvironment) -> APIConfig {
         switch environment {
+        case .publicServer:
+            return .publicServer
         case .localSimulator:
             return .localSimulator
         case .localNetwork:
@@ -108,7 +121,7 @@ enum SpecialEventDataSource: String, Codable, Hashable {
     var displayName: String {
         switch self {
         case .remoteServer:
-            return "本地服务器"
+            return "事件服务器"
         case .localCache:
             return "离线缓存"
         case .bundledJSON:

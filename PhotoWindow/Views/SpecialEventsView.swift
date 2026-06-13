@@ -162,6 +162,17 @@ struct SpecialEventRow: View {
             .font(.caption)
             .foregroundStyle(Color.photoMutedText)
 
+            HStack(spacing: 8) {
+                SpecialEventSourceBadge(sourceType: event.sourceType)
+                if !event.sourceName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Text(event.sourceName)
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Color.photoMutedText)
+                        .lineLimit(1)
+                }
+                Spacer(minLength: 0)
+            }
+
             if let watchlistHitText {
                 Label(watchlistHitText, systemImage: "scope")
                     .font(.caption.weight(.semibold))
@@ -186,6 +197,20 @@ struct SpecialEventRow: View {
             ? "\(event.importanceLevel.displayName)事件，推荐系统会优先保留。"
             : "\(event.importanceLevel.displayName)事件，适合作为普通拍摄窗口参考。"
         return "推荐预览：\(importanceText) \(confidenceText)"
+    }
+}
+
+struct SpecialEventSourceBadge: View {
+    let sourceType: SpecialEventSourceType
+
+    var body: some View {
+        Text(sourceType.displayName)
+            .font(.caption2.weight(.bold))
+            .foregroundStyle(Color.photoAccent)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(Color.photoAccent.opacity(0.12))
+            .clipShape(Capsule())
     }
 }
 
