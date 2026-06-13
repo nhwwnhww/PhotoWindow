@@ -5,12 +5,8 @@ struct ScoreBadge: View {
     let level: ShootingWindowScoreLevel
 
     var body: some View {
-        HStack(spacing: 6) {
-            Text("\(score)")
-                .font(.headline.weight(.bold))
-            Text(level.displayName)
-                .font(.caption.weight(.semibold))
-        }
+        Text("\(level.displayName) · \(score)/100")
+            .font(.caption.weight(.bold))
         .foregroundStyle(.black)
         .padding(.horizontal, 10)
         .padding(.vertical, 6)

@@ -9,10 +9,16 @@ final class CategoryViewModel: ObservableObject {
 
     let category: PhotographyCategory
     private let shootingWindowRepository: any ShootingWindowRepository
+    private let analyticsService: any AnalyticsServicing
 
-    init(category: PhotographyCategory, shootingWindowRepository: any ShootingWindowRepository) {
+    init(
+        category: PhotographyCategory,
+        shootingWindowRepository: any ShootingWindowRepository,
+        analyticsService: any AnalyticsServicing
+    ) {
         self.category = category
         self.shootingWindowRepository = shootingWindowRepository
+        self.analyticsService = analyticsService
     }
 
     func load() async {
@@ -21,6 +27,7 @@ final class CategoryViewModel: ObservableObject {
 
         do {
             windows = try await shootingWindowRepository.fetchWindows(for: category)
+            await analyticsService.record(.categoryOpened, category: category)
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription

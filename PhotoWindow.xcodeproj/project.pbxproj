@@ -16,17 +16,42 @@
 		A00000000000000000000007 /* WeatherSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000007 /* WeatherSnapshot.swift */; };
 		A00000000000000000000008 /* AlertRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000008 /* AlertRule.swift */; };
 		A00000000000000000000009 /* NotificationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000009 /* NotificationItem.swift */; };
+		A00000000000000000000033 /* AstronomySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000033 /* AstronomySnapshot.swift */; };
+		A00000000000000000000035 /* UserPreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000035 /* UserPreference.swift */; };
+		A00000000000000000000041 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000041 /* Feedback.swift */; };
+		A00000000000000000000042 /* AnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000042 /* AnalyticsEvent.swift */; };
+		A00000000000000000000051 /* SpecialEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000052 /* SpecialEvent.swift */; };
+		A00000000000000000000064 /* RecommendationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000067 /* RecommendationResult.swift */; };
 		A00000000000000000000010 /* Repositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000010 /* Repositories.swift */; };
 		A00000000000000000000011 /* MockRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000011 /* MockRepositories.swift */; };
+		A00000000000000000000052 /* SpecialEventRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000053 /* SpecialEventRepositories.swift */; };
 		A00000000000000000000012 /* ShootingWindowScoringService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000012 /* ShootingWindowScoringService.swift */; };
 		A00000000000000000000013 /* MockDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000013 /* MockDataService.swift */; };
 		A00000000000000000000014 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000014 /* NotificationService.swift */; };
+		A00000000000000000000034 /* ShootingWindowGenerationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000034 /* ShootingWindowGenerationService.swift */; };
+		A00000000000000000000036 /* AlertMatchingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000036 /* AlertMatchingService.swift */; };
+		A00000000000000000000053 /* SpecialEventDeduplicationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000054 /* SpecialEventDeduplicationService.swift */; };
+		A00000000000000000000054 /* SpecialEventIngestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000055 /* SpecialEventIngestionService.swift */; };
+		A00000000000000000000060 /* SpecialEventDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000061 /* SpecialEventDataService.swift */; };
+		A00000000000000000000061 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000064 /* NetworkClient.swift */; };
+		A00000000000000000000065 /* ScoringRuleConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000068 /* ScoringRuleConfigService.swift */; };
+		A00000000000000000000066 /* NotificationQualityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000069 /* NotificationQualityService.swift */; };
+		A00000000000000000000043 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000043 /* AnalyticsService.swift */; };
+		A00000000000000000000046 /* LocationSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000046 /* LocationSearchService.swift */; };
 		A00000000000000000000015 /* AppDependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000015 /* AppDependencyContainer.swift */; };
 		A00000000000000000000016 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000016 /* HomeViewModel.swift */; };
 		A00000000000000000000017 /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000017 /* CategoryViewModel.swift */; };
 		A00000000000000000000018 /* ShootingWindowDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000018 /* ShootingWindowDetailViewModel.swift */; };
 		A00000000000000000000019 /* AlertSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000019 /* AlertSettingsViewModel.swift */; };
 		A00000000000000000000020 /* LocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000020 /* LocationViewModel.swift */; };
+		A00000000000000000000037 /* OnboardingPreferenceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000037 /* OnboardingPreferenceViewModel.swift */; };
+		A00000000000000000000038 /* UpcomingNotificationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000038 /* UpcomingNotificationsViewModel.swift */; };
+		A00000000000000000000044 /* DebugNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000044 /* DebugNotificationViewModel.swift */; };
+		A00000000000000000000047 /* AddLocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000047 /* AddLocationViewModel.swift */; };
+		A00000000000000000000048 /* LocationDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000048 /* LocationDetailViewModel.swift */; };
+		A00000000000000000000055 /* SpecialEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000056 /* SpecialEventsViewModel.swift */; };
+		A00000000000000000000056 /* SpecialEventDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000057 /* SpecialEventDetailViewModel.swift */; };
+		A00000000000000000000062 /* DataDebugViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000065 /* DataDebugViewModel.swift */; };
 		A00000000000000000000021 /* PhotoTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000021 /* PhotoTheme.swift */; };
 		A00000000000000000000022 /* ScoreBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000022 /* ScoreBadge.swift */; };
 		A00000000000000000000023 /* CategoryPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000023 /* CategoryPill.swift */; };
@@ -38,7 +63,17 @@
 		A00000000000000000000029 /* ShootingWindowDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000029 /* ShootingWindowDetailView.swift */; };
 		A00000000000000000000030 /* AlertSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000030 /* AlertSettingsView.swift */; };
 		A00000000000000000000031 /* ExploreLocationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000031 /* ExploreLocationsView.swift */; };
+		A00000000000000000000039 /* OnboardingPreferenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000039 /* OnboardingPreferenceView.swift */; };
+		A00000000000000000000040 /* UpcomingNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000040 /* UpcomingNotificationsView.swift */; };
+		A00000000000000000000045 /* DebugNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000045 /* DebugNotificationView.swift */; };
+		A00000000000000000000049 /* AddLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000049 /* AddLocationView.swift */; };
+		A00000000000000000000050 /* LocationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000051 /* LocationDetailView.swift */; };
+		A00000000000000000000057 /* SpecialEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000058 /* SpecialEventsView.swift */; };
+		A00000000000000000000058 /* SpecialEventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000059 /* SpecialEventDetailView.swift */; };
+		A00000000000000000000063 /* DataDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000066 /* DataDebugView.swift */; };
 		A00000000000000000000032 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000032 /* Assets.xcassets */; };
+		A00000000000000000000059 /* special_events_seed.json in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000060 /* special_events_seed.json */; };
+		A00000000000000000000067 /* scoring_rules.json in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000070 /* scoring_rules.json */; };
 		A00000000000000000000101 /* ShootingWindowScoringServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000101 /* ShootingWindowScoringServiceTests.swift */; };
 		A00000000000000000000102 /* MockRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000102 /* MockRepositoryTests.swift */; };
 /* End PBXBuildFile section */
@@ -63,17 +98,42 @@
 		B00000000000000000000007 /* WeatherSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherSnapshot.swift; sourceTree = "<group>"; };
 		B00000000000000000000008 /* AlertRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertRule.swift; sourceTree = "<group>"; };
 		B00000000000000000000009 /* NotificationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationItem.swift; sourceTree = "<group>"; };
+		B00000000000000000000033 /* AstronomySnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstronomySnapshot.swift; sourceTree = "<group>"; };
+		B00000000000000000000035 /* UserPreference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreference.swift; sourceTree = "<group>"; };
+		B00000000000000000000041 /* Feedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
+		B00000000000000000000042 /* AnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsEvent.swift; sourceTree = "<group>"; };
+		B00000000000000000000052 /* SpecialEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialEvent.swift; sourceTree = "<group>"; };
+		B00000000000000000000067 /* RecommendationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationResult.swift; sourceTree = "<group>"; };
 		B00000000000000000000010 /* Repositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repositories.swift; sourceTree = "<group>"; };
 		B00000000000000000000011 /* MockRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRepositories.swift; sourceTree = "<group>"; };
+		B00000000000000000000053 /* SpecialEventRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialEventRepositories.swift; sourceTree = "<group>"; };
 		B00000000000000000000012 /* ShootingWindowScoringService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShootingWindowScoringService.swift; sourceTree = "<group>"; };
 		B00000000000000000000013 /* MockDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataService.swift; sourceTree = "<group>"; };
 		B00000000000000000000014 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		B00000000000000000000034 /* ShootingWindowGenerationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShootingWindowGenerationService.swift; sourceTree = "<group>"; };
+		B00000000000000000000036 /* AlertMatchingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertMatchingService.swift; sourceTree = "<group>"; };
+		B00000000000000000000054 /* SpecialEventDeduplicationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialEventDeduplicationService.swift; sourceTree = "<group>"; };
+		B00000000000000000000055 /* SpecialEventIngestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialEventIngestionService.swift; sourceTree = "<group>"; };
+		B00000000000000000000061 /* SpecialEventDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialEventDataService.swift; sourceTree = "<group>"; };
+		B00000000000000000000064 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
+		B00000000000000000000068 /* ScoringRuleConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringRuleConfigService.swift; sourceTree = "<group>"; };
+		B00000000000000000000069 /* NotificationQualityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationQualityService.swift; sourceTree = "<group>"; };
+		B00000000000000000000043 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
+		B00000000000000000000046 /* LocationSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchService.swift; sourceTree = "<group>"; };
 		B00000000000000000000015 /* AppDependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencyContainer.swift; sourceTree = "<group>"; };
 		B00000000000000000000016 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		B00000000000000000000017 /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
 		B00000000000000000000018 /* ShootingWindowDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShootingWindowDetailViewModel.swift; sourceTree = "<group>"; };
 		B00000000000000000000019 /* AlertSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSettingsViewModel.swift; sourceTree = "<group>"; };
 		B00000000000000000000020 /* LocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewModel.swift; sourceTree = "<group>"; };
+		B00000000000000000000037 /* OnboardingPreferenceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPreferenceViewModel.swift; sourceTree = "<group>"; };
+		B00000000000000000000038 /* UpcomingNotificationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingNotificationsViewModel.swift; sourceTree = "<group>"; };
+		B00000000000000000000044 /* DebugNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugNotificationViewModel.swift; sourceTree = "<group>"; };
+		B00000000000000000000047 /* AddLocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationViewModel.swift; sourceTree = "<group>"; };
+		B00000000000000000000048 /* LocationDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailViewModel.swift; sourceTree = "<group>"; };
+		B00000000000000000000056 /* SpecialEventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialEventsViewModel.swift; sourceTree = "<group>"; };
+		B00000000000000000000057 /* SpecialEventDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialEventDetailViewModel.swift; sourceTree = "<group>"; };
+		B00000000000000000000065 /* DataDebugViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDebugViewModel.swift; sourceTree = "<group>"; };
 		B00000000000000000000021 /* PhotoTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoTheme.swift; sourceTree = "<group>"; };
 		B00000000000000000000022 /* ScoreBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreBadge.swift; sourceTree = "<group>"; };
 		B00000000000000000000023 /* CategoryPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPill.swift; sourceTree = "<group>"; };
@@ -85,7 +145,19 @@
 		B00000000000000000000029 /* ShootingWindowDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShootingWindowDetailView.swift; sourceTree = "<group>"; };
 		B00000000000000000000030 /* AlertSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSettingsView.swift; sourceTree = "<group>"; };
 		B00000000000000000000031 /* ExploreLocationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreLocationsView.swift; sourceTree = "<group>"; };
+		B00000000000000000000039 /* OnboardingPreferenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPreferenceView.swift; sourceTree = "<group>"; };
+		B00000000000000000000040 /* UpcomingNotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingNotificationsView.swift; sourceTree = "<group>"; };
+		B00000000000000000000045 /* DebugNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugNotificationView.swift; sourceTree = "<group>"; };
+		B00000000000000000000049 /* AddLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationView.swift; sourceTree = "<group>"; };
+		B00000000000000000000051 /* LocationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailView.swift; sourceTree = "<group>"; };
+		B00000000000000000000058 /* SpecialEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialEventsView.swift; sourceTree = "<group>"; };
+		B00000000000000000000059 /* SpecialEventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialEventDetailView.swift; sourceTree = "<group>"; };
+		B00000000000000000000066 /* DataDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataDebugView.swift; sourceTree = "<group>"; };
 		B00000000000000000000032 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B00000000000000000000062 /* Info-Debug.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-Debug.plist"; sourceTree = "<group>"; };
+		B00000000000000000000063 /* Info-Release.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-Release.plist"; sourceTree = "<group>"; };
+		B00000000000000000000060 /* special_events_seed.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = special_events_seed.json; sourceTree = "<group>"; };
+		B00000000000000000000070 /* scoring_rules.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = scoring_rules.json; sourceTree = "<group>"; };
 		B00000000000000000000050 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B00000000000000000000101 /* ShootingWindowScoringServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShootingWindowScoringServiceTests.swift; sourceTree = "<group>"; };
 		B00000000000000000000102 /* MockRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRepositoryTests.swift; sourceTree = "<group>"; };
@@ -139,7 +211,10 @@
 				G00000000000000000000006 /* Services */,
 				G00000000000000000000007 /* ViewModels */,
 				G00000000000000000000008 /* Views */,
+				G00000000000000000000011 /* Resources */,
 				B00000000000000000000032 /* Assets.xcassets */,
+				B00000000000000000000062 /* Info-Debug.plist */,
+				B00000000000000000000063 /* Info-Release.plist */,
 			);
 			path = PhotoWindow;
 			sourceTree = "<group>";
@@ -153,6 +228,12 @@
 				B00000000000000000000005 /* ShootingEvent.swift */,
 				B00000000000000000000006 /* ShootingWindow.swift */,
 				B00000000000000000000007 /* WeatherSnapshot.swift */,
+				B00000000000000000000033 /* AstronomySnapshot.swift */,
+				B00000000000000000000035 /* UserPreference.swift */,
+				B00000000000000000000041 /* Feedback.swift */,
+				B00000000000000000000042 /* AnalyticsEvent.swift */,
+				B00000000000000000000052 /* SpecialEvent.swift */,
+				B00000000000000000000067 /* RecommendationResult.swift */,
 				B00000000000000000000008 /* AlertRule.swift */,
 				B00000000000000000000009 /* NotificationItem.swift */,
 			);
@@ -164,6 +245,7 @@
 			children = (
 				B00000000000000000000010 /* Repositories.swift */,
 				B00000000000000000000011 /* MockRepositories.swift */,
+				B00000000000000000000053 /* SpecialEventRepositories.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -172,6 +254,16 @@
 			isa = PBXGroup;
 			children = (
 				B00000000000000000000012 /* ShootingWindowScoringService.swift */,
+				B00000000000000000000034 /* ShootingWindowGenerationService.swift */,
+				B00000000000000000000036 /* AlertMatchingService.swift */,
+				B00000000000000000000054 /* SpecialEventDeduplicationService.swift */,
+				B00000000000000000000055 /* SpecialEventIngestionService.swift */,
+				B00000000000000000000061 /* SpecialEventDataService.swift */,
+				B00000000000000000000064 /* NetworkClient.swift */,
+				B00000000000000000000068 /* ScoringRuleConfigService.swift */,
+				B00000000000000000000069 /* NotificationQualityService.swift */,
+				B00000000000000000000043 /* AnalyticsService.swift */,
+				B00000000000000000000046 /* LocationSearchService.swift */,
 				B00000000000000000000013 /* MockDataService.swift */,
 				B00000000000000000000014 /* NotificationService.swift */,
 			);
@@ -187,6 +279,14 @@
 				B00000000000000000000018 /* ShootingWindowDetailViewModel.swift */,
 				B00000000000000000000019 /* AlertSettingsViewModel.swift */,
 				B00000000000000000000020 /* LocationViewModel.swift */,
+				B00000000000000000000037 /* OnboardingPreferenceViewModel.swift */,
+				B00000000000000000000038 /* UpcomingNotificationsViewModel.swift */,
+				B00000000000000000000044 /* DebugNotificationViewModel.swift */,
+				B00000000000000000000047 /* AddLocationViewModel.swift */,
+				B00000000000000000000048 /* LocationDetailViewModel.swift */,
+				B00000000000000000000056 /* SpecialEventsViewModel.swift */,
+				B00000000000000000000057 /* SpecialEventDetailViewModel.swift */,
+				B00000000000000000000065 /* DataDebugViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -201,6 +301,14 @@
 				B00000000000000000000029 /* ShootingWindowDetailView.swift */,
 				B00000000000000000000030 /* AlertSettingsView.swift */,
 				B00000000000000000000031 /* ExploreLocationsView.swift */,
+				B00000000000000000000039 /* OnboardingPreferenceView.swift */,
+				B00000000000000000000040 /* UpcomingNotificationsView.swift */,
+				B00000000000000000000045 /* DebugNotificationView.swift */,
+				B00000000000000000000049 /* AddLocationView.swift */,
+				B00000000000000000000051 /* LocationDetailView.swift */,
+				B00000000000000000000058 /* SpecialEventsView.swift */,
+				B00000000000000000000059 /* SpecialEventDetailView.swift */,
+				B00000000000000000000066 /* DataDebugView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -224,6 +332,15 @@
 				B00000000000000000000102 /* MockRepositoryTests.swift */,
 			);
 			path = PhotoWindowTests;
+			sourceTree = "<group>";
+		};
+		G00000000000000000000011 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B00000000000000000000060 /* special_events_seed.json */,
+				B00000000000000000000070 /* scoring_rules.json */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -308,6 +425,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A00000000000000000000032 /* Assets.xcassets in Resources */,
+				A00000000000000000000059 /* special_events_seed.json in Resources */,
+				A00000000000000000000067 /* scoring_rules.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,11 +451,28 @@
 				A00000000000000000000005 /* ShootingEvent.swift in Sources */,
 				A00000000000000000000006 /* ShootingWindow.swift in Sources */,
 				A00000000000000000000007 /* WeatherSnapshot.swift in Sources */,
+				A00000000000000000000033 /* AstronomySnapshot.swift in Sources */,
+				A00000000000000000000035 /* UserPreference.swift in Sources */,
+				A00000000000000000000041 /* Feedback.swift in Sources */,
+				A00000000000000000000042 /* AnalyticsEvent.swift in Sources */,
+				A00000000000000000000051 /* SpecialEvent.swift in Sources */,
+				A00000000000000000000064 /* RecommendationResult.swift in Sources */,
 				A00000000000000000000008 /* AlertRule.swift in Sources */,
 				A00000000000000000000009 /* NotificationItem.swift in Sources */,
 				A00000000000000000000010 /* Repositories.swift in Sources */,
 				A00000000000000000000011 /* MockRepositories.swift in Sources */,
+				A00000000000000000000052 /* SpecialEventRepositories.swift in Sources */,
 				A00000000000000000000012 /* ShootingWindowScoringService.swift in Sources */,
+				A00000000000000000000034 /* ShootingWindowGenerationService.swift in Sources */,
+				A00000000000000000000036 /* AlertMatchingService.swift in Sources */,
+				A00000000000000000000053 /* SpecialEventDeduplicationService.swift in Sources */,
+				A00000000000000000000054 /* SpecialEventIngestionService.swift in Sources */,
+				A00000000000000000000060 /* SpecialEventDataService.swift in Sources */,
+				A00000000000000000000061 /* NetworkClient.swift in Sources */,
+				A00000000000000000000065 /* ScoringRuleConfigService.swift in Sources */,
+				A00000000000000000000066 /* NotificationQualityService.swift in Sources */,
+				A00000000000000000000043 /* AnalyticsService.swift in Sources */,
+				A00000000000000000000046 /* LocationSearchService.swift in Sources */,
 				A00000000000000000000013 /* MockDataService.swift in Sources */,
 				A00000000000000000000014 /* NotificationService.swift in Sources */,
 				A00000000000000000000015 /* AppDependencyContainer.swift in Sources */,
@@ -345,6 +481,14 @@
 				A00000000000000000000018 /* ShootingWindowDetailViewModel.swift in Sources */,
 				A00000000000000000000019 /* AlertSettingsViewModel.swift in Sources */,
 				A00000000000000000000020 /* LocationViewModel.swift in Sources */,
+				A00000000000000000000037 /* OnboardingPreferenceViewModel.swift in Sources */,
+				A00000000000000000000038 /* UpcomingNotificationsViewModel.swift in Sources */,
+				A00000000000000000000044 /* DebugNotificationViewModel.swift in Sources */,
+				A00000000000000000000047 /* AddLocationViewModel.swift in Sources */,
+				A00000000000000000000048 /* LocationDetailViewModel.swift in Sources */,
+				A00000000000000000000055 /* SpecialEventsViewModel.swift in Sources */,
+				A00000000000000000000056 /* SpecialEventDetailViewModel.swift in Sources */,
+				A00000000000000000000062 /* DataDebugViewModel.swift in Sources */,
 				A00000000000000000000021 /* PhotoTheme.swift in Sources */,
 				A00000000000000000000022 /* ScoreBadge.swift in Sources */,
 				A00000000000000000000023 /* CategoryPill.swift in Sources */,
@@ -356,6 +500,14 @@
 				A00000000000000000000029 /* ShootingWindowDetailView.swift in Sources */,
 				A00000000000000000000030 /* AlertSettingsView.swift in Sources */,
 				A00000000000000000000031 /* ExploreLocationsView.swift in Sources */,
+				A00000000000000000000039 /* OnboardingPreferenceView.swift in Sources */,
+				A00000000000000000000040 /* UpcomingNotificationsView.swift in Sources */,
+				A00000000000000000000045 /* DebugNotificationView.swift in Sources */,
+				A00000000000000000000049 /* AddLocationView.swift in Sources */,
+				A00000000000000000000050 /* LocationDetailView.swift in Sources */,
+				A00000000000000000000057 /* SpecialEventsView.swift in Sources */,
+				A00000000000000000000058 /* SpecialEventDetailView.swift in Sources */,
+				A00000000000000000000063 /* DataDebugView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,13 +659,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = PhotoWindow;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.weather";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PhotoWindow uses your location to suggest nearby photography windows.";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "PhotoWindow/Info-Debug.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -538,13 +685,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = PhotoWindow;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.weather";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "PhotoWindow uses your location to suggest nearby photography windows.";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "PhotoWindow/Info-Release.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

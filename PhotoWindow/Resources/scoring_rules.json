@@ -1,0 +1,81 @@
+{
+  "categories": {
+    "astro": {
+      "cloudCoverWeight": 0.24,
+      "precipitationWeight": 0.14,
+      "windWeight": 0.05,
+      "visibilityWeight": 0.13,
+      "moonIlluminationWeight": 0.22,
+      "lightPollutionWeight": 0.17,
+      "goldenHourWeight": 0,
+      "eventImportanceWeight": 0.03,
+      "confidenceWeight": 0.02
+    },
+    "aviation": {
+      "cloudCoverWeight": 0.05,
+      "precipitationWeight": 0.18,
+      "windWeight": 0.12,
+      "visibilityWeight": 0.24,
+      "moonIlluminationWeight": 0,
+      "lightPollutionWeight": 0,
+      "goldenHourWeight": 0,
+      "eventImportanceWeight": 0.29,
+      "confidenceWeight": 0.12
+    },
+    "landscape": {
+      "cloudCoverWeight": 0.26,
+      "precipitationWeight": 0.20,
+      "windWeight": 0.12,
+      "visibilityWeight": 0.06,
+      "moonIlluminationWeight": 0,
+      "lightPollutionWeight": 0,
+      "goldenHourWeight": 0.30,
+      "eventImportanceWeight": 0.04,
+      "confidenceWeight": 0.02
+    },
+    "graduation": {
+      "cloudCoverWeight": 0.24,
+      "precipitationWeight": 0.24,
+      "windWeight": 0.20,
+      "visibilityWeight": 0,
+      "moonIlluminationWeight": 0,
+      "lightPollutionWeight": 0,
+      "goldenHourWeight": 0.22,
+      "eventImportanceWeight": 0.06,
+      "confidenceWeight": 0.04
+    },
+    "portrait": {
+      "cloudCoverWeight": 0.24,
+      "precipitationWeight": 0.24,
+      "windWeight": 0.20,
+      "visibilityWeight": 0,
+      "moonIlluminationWeight": 0,
+      "lightPollutionWeight": 0,
+      "goldenHourWeight": 0.22,
+      "eventImportanceWeight": 0.06,
+      "confidenceWeight": 0.04
+    },
+    "cityscape": {
+      "cloudCoverWeight": 0.24,
+      "precipitationWeight": 0.16,
+      "windWeight": 0.10,
+      "visibilityWeight": 0.12,
+      "moonIlluminationWeight": 0,
+      "lightPollutionWeight": 0,
+      "goldenHourWeight": 0.32,
+      "eventImportanceWeight": 0.04,
+      "confidenceWeight": 0.02
+    },
+    "wildlife": {
+      "cloudCoverWeight": 0.05,
+      "precipitationWeight": 0.22,
+      "windWeight": 0.20,
+      "visibilityWeight": 0.22,
+      "moonIlluminationWeight": 0,
+      "lightPollutionWeight": 0,
+      "goldenHourWeight": 0.24,
+      "eventImportanceWeight": 0.04,
+      "confidenceWeight": 0.03
+    }
+  }
+}

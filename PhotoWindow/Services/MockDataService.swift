@@ -10,14 +10,29 @@ struct MockDataService {
         let events = makeEvents(locations: locations)
         let windows = makeWindows(locations: locations, weather: weather, events: events)
         let user = makeUser(homeLocation: locations[1])
+        let userPreference = makeUserPreference(locations: locations)
         let alertRules = makeAlertRules(user: user, locations: locations)
+        let watchlistItems = makeWatchlistItems(user: user)
 
         return MockSeedData(
             user: user,
+            userPreference: userPreference,
             locations: locations,
             events: events,
             windows: windows,
-            alertRules: alertRules
+            alertRules: alertRules,
+            watchlistItems: watchlistItems
+        )
+    }
+
+    private func makeUserPreference(locations: [ShootingLocation]) -> UserPreference {
+        UserPreference(
+            id: UUID(uuidString: "E6BC2E56-9DF7-4C2B-8B46-9A61F5CDA111") ?? UUID(),
+            selectedCategories: [.astro, .aviation, .landscape, .graduation],
+            favoriteLocationIds: [locations[0].id, locations[1].id, locations[2].id],
+            defaultMinScore: 75,
+            defaultReminderMinutes: 180,
+            dailySummaryEnabled: true
         )
     }
 
@@ -33,6 +48,7 @@ struct MockDataService {
             notificationPreference: NotificationPreference(
                 isEnabled: true,
                 defaultRemindBeforeMinutes: 180,
+                shouldMergeNearbyReminders: true,
                 quietHoursStart: 23,
                 quietHoursEnd: 7
             )
@@ -50,7 +66,9 @@ struct MockDataService {
                 country: "Australia",
                 lightPollutionLevel: 7,
                 locationType: .airport,
-                notes: "适合追踪特殊机型和特殊涂装，注意遵守机场周边拍摄规则。"
+                notes: "适合追踪特殊机型和特殊涂装，注意遵守机场周边拍摄规则。",
+                isFavorite: true,
+                supportedCategories: [.aviation]
             ),
             ShootingLocation(
                 id: UUID(uuidString: "63FC10D3-0CE1-4A10-B2DD-20DE7E363F51") ?? UUID(),
@@ -61,7 +79,9 @@ struct MockDataService {
                 country: "Australia",
                 lightPollutionLevel: 6,
                 locationType: .campus,
-                notes: "草坪、湖边和砂岩建筑适合毕业照与自然光人像。"
+                notes: "草坪、湖边和砂岩建筑适合毕业照与自然光人像。",
+                isFavorite: true,
+                supportedCategories: [.graduation, .portrait]
             ),
             ShootingLocation(
                 id: UUID(uuidString: "214E2E45-1D34-427C-8CF4-9327169C7F51") ?? UUID(),
@@ -72,7 +92,22 @@ struct MockDataService {
                 country: "Australia",
                 lightPollutionLevel: 2,
                 locationType: .darkSky,
-                notes: "远离市区光污染，适合银河、星轨和日出风光。"
+                notes: "远离市区光污染，适合银河、星轨和日出风光。",
+                isFavorite: true,
+                supportedCategories: [.astro, .landscape]
+            ),
+            ShootingLocation(
+                id: UUID(uuidString: "A0B18D79-9EA7-482C-92DB-31CE3ABF3111") ?? UUID(),
+                name: "South Bank",
+                latitude: -27.4810,
+                longitude: 153.0234,
+                city: "Brisbane",
+                country: "Australia",
+                lightPollutionLevel: 7,
+                locationType: .urban,
+                notes: "适合城市日落、火烧云和河岸夜景，不做复杂地图。",
+                isFavorite: false,
+                supportedCategories: [.cityscape, .landscape]
             )
         ]
     }
@@ -112,6 +147,17 @@ struct MockDataService {
                 moonPhase: "New Moon",
                 moonIllumination: 6
             ),
+            "astroPoor": weather(
+                dayOffset: 1,
+                temperature: 19,
+                cloudCover: 82,
+                precipitation: 45,
+                windSpeed: 18,
+                visibility: 8,
+                humidity: 78,
+                moonPhase: "Waxing Gibbous",
+                moonIllumination: 76
+            ),
             "landscape": weather(
                 dayOffset: 1,
                 temperature: 20,
@@ -122,6 +168,17 @@ struct MockDataService {
                 humidity: 60,
                 moonPhase: "Waxing Crescent",
                 moonIllumination: 22
+            ),
+            "southBank": weather(
+                dayOffset: 1,
+                temperature: 22,
+                cloudCover: 54,
+                precipitation: 12,
+                windSpeed: 11,
+                visibility: 18,
+                humidity: 58,
+                moonPhase: "Waxing Crescent",
+                moonIllumination: 22
             )
         ]
     }
@@ -130,6 +187,7 @@ struct MockDataService {
         let airport = locations[0]
         let campus = locations[1]
         let darkSky = locations[2]
+        let southBank = locations[3]
 
         return [
             ShootingEvent(
@@ -141,8 +199,23 @@ struct MockDataService {
                 startTime: date(dayOffset: 1, hour: 17, minute: 20),
                 endTime: date(dayOffset: 1, hour: 18, minute: 0),
                 importanceScore: 88,
-                description: "Mock 航空事件：特殊涂装机预计傍晚抵达，光线方向适合侧面记录。",
-                tags: ["Qantas", "Special Livery", "Arrival"],
+                importanceLevel: .rare,
+                description: "Mock 航空事件：特殊涂装机预计傍晚抵达，出现频率较低，光线方向适合侧面记录。",
+                tags: ["Qantas", "Special Livery", "Retro Livery", "Arrival"],
+                sourceType: .mock
+            ),
+            ShootingEvent(
+                id: UUID(uuidString: "63877092-F88C-4C40-B01D-A38000000111") ?? UUID(),
+                title: "Brisbane Airport A380 到达",
+                category: .aviation,
+                eventType: .specialAircraft,
+                location: airport,
+                startTime: date(dayOffset: 1, hour: 18, minute: 10),
+                endTime: date(dayOffset: 1, hour: 18, minute: 45),
+                importanceScore: 76,
+                importanceLevel: .worthWatching,
+                description: "Mock 航空事件：A380 傍晚进港，机型体量和到达时间都值得关注。",
+                tags: ["A380", "Rare Aircraft", "Arrival"],
                 sourceType: .mock
             ),
             ShootingEvent(
@@ -154,21 +227,51 @@ struct MockDataService {
                 startTime: date(dayOffset: 3, hour: 21, minute: 30),
                 endTime: date(dayOffset: 4, hour: 1, minute: 15),
                 importanceScore: 92,
+                importanceLevel: .rare,
                 description: "低月光、低云量和低光污染叠加，适合拍摄银河核心。",
                 tags: ["Milky Way", "New Moon", "Dark Sky"],
                 sourceType: .mock
             ),
             ShootingEvent(
+                id: UUID(uuidString: "B5036E93-0B3D-49B5-8BBD-4E7300000111") ?? UUID(),
+                title: "Lake Moogerah 流星雨窗口",
+                category: .astro,
+                eventType: .meteorShower,
+                location: darkSky,
+                startTime: date(dayOffset: 3, hour: 23, minute: 20),
+                endTime: date(dayOffset: 4, hour: 2, minute: 30),
+                importanceScore: 95,
+                importanceLevel: .mustShoot,
+                description: "Mock 天象事件：低月光叠加流星雨峰值，属于必拍级别窗口。",
+                tags: ["Meteor Shower", "Dark Sky", "Must Shoot"],
+                sourceType: .mock
+            ),
+            ShootingEvent(
                 id: UUID(uuidString: "88002A8A-9C1D-4E2F-B30D-8CE878395211") ?? UUID(),
-                title: "UQ 毕业季拍摄高峰",
+                title: "UQ Graduation Season 人像窗口",
                 category: .graduation,
                 eventType: .graduationSeason,
                 location: campus,
                 startTime: date(dayOffset: 2, hour: 15, minute: 30),
                 endTime: date(dayOffset: 2, hour: 18, minute: 20),
                 importanceScore: 78,
+                importanceLevel: .worthWatching,
                 description: "校园人像与毕业照需求高，下午柔光和低风速比较友好。",
-                tags: ["Graduation", "Portrait", "Campus"],
+                tags: ["Graduation Season", "Portrait", "Campus"],
+                sourceType: .mock
+            ),
+            ShootingEvent(
+                id: UUID(uuidString: "53D98B20-2F50-49B3-BE73-F19E50000111") ?? UUID(),
+                title: "South Bank 火烧云可能性窗口",
+                category: .landscape,
+                eventType: .sunset,
+                location: southBank,
+                startTime: date(dayOffset: 1, hour: 16, minute: 55),
+                endTime: date(dayOffset: 1, hour: 18, minute: 15),
+                importanceScore: 70,
+                importanceLevel: .worthWatching,
+                description: "Mock 风光事件：西侧云层结构较好，South Bank 河岸有火烧云可能。",
+                tags: ["Fire Sunset", "South Bank", "Sunset"],
                 sourceType: .mock
             )
         ]
@@ -182,21 +285,45 @@ struct MockDataService {
         let airport = locations[0]
         let campus = locations[1]
         let darkSky = locations[2]
+        let southBank = locations[3]
         let airportWeather = weather["airport"]!
         let campusWeather = weather["campus"]!
         let darkSkyWeather = weather["darkSky"]!
+        let astroPoorWeather = weather["astroPoor"]!
         let landscapeWeather = weather["landscape"]!
-        let aviationEvent = events[0]
-        let astroEvent = events[1]
-        let graduationEvent = events[2]
+        let southBankWeather = weather["southBank"]!
+        let aviationEvent = events.first { $0.tags.contains("Special Livery") }!
+        let a380Event = events.first { $0.tags.contains("A380") }!
+        let astroEvent = events.first { $0.eventType == .milkyWayWindow }!
+        let meteorEvent = events.first { $0.eventType == .meteorShower }!
+        let graduationEvent = events.first { $0.eventType == .graduationSeason }!
+        let fireSunsetEvent = events.first { $0.tags.contains("Fire Sunset") }!
+
+        let poorAstroStart = date(dayOffset: 1, hour: 21, minute: 10)
+        let poorAstroEnd = date(dayOffset: 1, hour: 23, minute: 30)
+        let poorAstroScore = scoringService.scoreAstroWindow(
+            weather: astroPoorWeather,
+            location: darkSky,
+            timeRange: poorAstroStart...poorAstroEnd
+        )
 
         let astroStart = date(dayOffset: 3, hour: 21, minute: 30)
         let astroEnd = date(dayOffset: 4, hour: 1, minute: 15)
-        let astroScore = scoringService.scoreAstroWindow(
+        let astroBaseScore = scoringService.scoreAstroWindow(
             weather: darkSkyWeather,
             location: darkSky,
             timeRange: astroStart...astroEnd
         )
+        let astroScore = scoringService.applyEventImportance(baseScore: astroBaseScore, events: [astroEvent])
+
+        let meteorStart = date(dayOffset: 3, hour: 23, minute: 20)
+        let meteorEnd = date(dayOffset: 4, hour: 2, minute: 30)
+        let meteorBaseScore = scoringService.scoreAstroWindow(
+            weather: darkSkyWeather,
+            location: darkSky,
+            timeRange: meteorStart...meteorEnd
+        )
+        let meteorScore = scoringService.applyEventImportance(baseScore: meteorBaseScore, events: [meteorEvent])
 
         let sunsetStart = date(dayOffset: 1, hour: 16, minute: 45)
         let sunsetEnd = date(dayOffset: 1, hour: 18, minute: 35)
@@ -209,11 +336,27 @@ struct MockDataService {
         let aviationEnd = date(dayOffset: 1, hour: 18, minute: 10)
         let aviationScore = scoringService.scoreAviationWindow(event: aviationEvent, weather: airportWeather)
 
+        let a380Start = date(dayOffset: 1, hour: 17, minute: 20)
+        let a380End = date(dayOffset: 1, hour: 18, minute: 50)
+        let a380Score = scoringService.scoreAviationWindow(event: a380Event, weather: airportWeather)
+
         let graduationStart = date(dayOffset: 2, hour: 15, minute: 45)
         let graduationEnd = date(dayOffset: 2, hour: 18, minute: 10)
-        let graduationScore = scoringService.scorePortraitOrGraduationWindow(
+        let graduationBaseScore = scoringService.scorePortraitOrGraduationWindow(
             weather: campusWeather,
             timeRange: graduationStart...graduationEnd
+        )
+        let graduationScore = scoringService.applyEventImportance(baseScore: graduationBaseScore, events: [graduationEvent])
+
+        let fireSunsetStart = date(dayOffset: 1, hour: 16, minute: 55)
+        let fireSunsetEnd = date(dayOffset: 1, hour: 18, minute: 15)
+        let fireSunsetBaseScore = scoringService.scoreLandscapeWindow(
+            weather: southBankWeather,
+            timeRange: fireSunsetStart...fireSunsetEnd
+        )
+        let fireSunsetScore = scoringService.applyEventImportance(
+            baseScore: fireSunsetBaseScore,
+            events: [fireSunsetEvent]
         )
 
         let cityStart = date(dayOffset: 1, hour: 5, minute: 10)
@@ -229,6 +372,25 @@ struct MockDataService {
 
         return [
             ShootingWindow(
+                id: UUID(uuidString: "FDC9D23D-BB4F-4E88-AF1B-9C765200A111") ?? UUID(),
+                category: .astro,
+                location: darkSky,
+                startTime: poorAstroStart,
+                endTime: poorAstroEnd,
+                windowTitle: "今晚银河不推荐窗口",
+                score: poorAstroScore,
+                scoreLevel: .from(score: poorAstroScore),
+                reasonSummary: "云量和月光都偏高，降雨概率也不低，今晚不适合拍银河。",
+                reasonTags: ["云量高", "月光强", "降雨概率较高", "能见度一般"],
+                scoreBreakdown: makeScoreBreakdown(for: .astro, score: poorAstroScore),
+                notRecommendedReason: "云量 82%，月亮照明 76%，降雨概率较高，银河主体很可能被云层和月光削弱。",
+                weatherSnapshot: astroPoorWeather,
+                eventRefs: [],
+                recommendationText: "今晚建议先不跑远郊，等低月光和低云量窗口再出发。",
+                isBookmarked: false,
+                alertEnabled: false
+            ),
+            ShootingWindow(
                 id: UUID(uuidString: "119A8C86-B531-4D7B-8E1B-25E0B50AB5C2") ?? UUID(),
                 category: .astro,
                 location: darkSky,
@@ -238,11 +400,33 @@ struct MockDataService {
                 score: astroScore,
                 scoreLevel: .from(score: astroScore),
                 reasonSummary: "云量较低，月光影响小，光污染低，适合银河拍摄。",
+                reasonTags: ["云量低", "月光弱", "能见度高", "光污染低", "降雨概率低"],
+                scoreBreakdown: makeScoreBreakdown(for: .astro, score: astroScore),
+                notRecommendedReason: nil,
                 weatherSnapshot: darkSkyWeather,
                 eventRefs: [astroEvent],
                 recommendationText: "建议提前到达完成构图，预留 20 分钟适应黑暗环境。",
                 isBookmarked: true,
-                alertEnabled: true
+                alertEnabled: false
+            ),
+            ShootingWindow(
+                id: UUID(uuidString: "9A1F5A15-8A47-4374-91D6-3D879D883111") ?? UUID(),
+                category: .astro,
+                location: darkSky,
+                startTime: meteorStart,
+                endTime: meteorEnd,
+                windowTitle: "Lake Moogerah 流星雨必拍窗口",
+                score: meteorScore,
+                scoreLevel: .from(score: meteorScore),
+                reasonSummary: "低月光与暗空地点叠加流星雨峰值，是本周最值得盯的夜间事件。",
+                reasonTags: ["流星雨", "必拍事件", "月光弱", "光污染低", "暗空地点"],
+                scoreBreakdown: makeScoreBreakdown(for: .astro, score: meteorScore),
+                notRecommendedReason: nil,
+                weatherSnapshot: darkSkyWeather,
+                eventRefs: [meteorEvent],
+                recommendationText: "建议提前完成构图和对焦，保留足够电量连续拍摄。",
+                isBookmarked: false,
+                alertEnabled: false
             ),
             ShootingWindow(
                 id: UUID(uuidString: "98CF1F2A-A2D2-4FA1-88B1-ECE3B98642A1") ?? UUID(),
@@ -254,9 +438,31 @@ struct MockDataService {
                 score: sunsetScore,
                 scoreLevel: .from(score: sunsetScore),
                 reasonSummary: "日落前后有适量高云，降雨概率低，值得尝试晚霞。",
+                reasonTags: ["日落时段", "高云适中", "降雨概率低", "风速可控"],
+                scoreBreakdown: makeScoreBreakdown(for: .landscape, score: sunsetScore),
+                notRecommendedReason: nil,
                 weatherSnapshot: landscapeWeather,
                 eventRefs: [],
                 recommendationText: "优先选择开阔湖岸机位，保留前景层次。",
+                isBookmarked: false,
+                alertEnabled: false
+            ),
+            ShootingWindow(
+                id: UUID(uuidString: "CA2EA869-F6B2-4D9C-B845-1D495A449111") ?? UUID(),
+                category: .landscape,
+                location: southBank,
+                startTime: fireSunsetStart,
+                endTime: fireSunsetEnd,
+                windowTitle: "South Bank 火烧云可能性窗口",
+                score: fireSunsetScore,
+                scoreLevel: .from(score: fireSunsetScore),
+                reasonSummary: "日落前云层结构较好，河岸视野开阔，有机会出现火烧云。",
+                reasonTags: ["Fire Sunset", "日落时段", "高云适中", "河岸机位"],
+                scoreBreakdown: makeScoreBreakdown(for: .landscape, score: fireSunsetScore),
+                notRecommendedReason: nil,
+                weatherSnapshot: southBankWeather,
+                eventRefs: [fireSunsetEvent],
+                recommendationText: "建议提前到河岸找前景，优先保留天空层次和水面反光。",
                 isBookmarked: false,
                 alertEnabled: false
             ),
@@ -270,11 +476,33 @@ struct MockDataService {
                 score: aviationScore,
                 scoreLevel: .from(score: aviationScore),
                 reasonSummary: "特殊涂装稀缺度高，能见度好，预计傍晚抵达。",
+                reasonTags: ["特殊涂装", "能见度好", "傍晚光线", "降雨概率低"],
+                scoreBreakdown: makeScoreBreakdown(for: .aviation, score: aviationScore),
+                notRecommendedReason: nil,
                 weatherSnapshot: airportWeather,
                 eventRefs: [aviationEvent],
                 recommendationText: "建议提前 45 分钟到达公开安全拍摄点，留意航班变更。",
                 isBookmarked: true,
                 alertEnabled: true
+            ),
+            ShootingWindow(
+                id: UUID(uuidString: "21F8D772-3DB2-4DEB-A380-5E348C880111") ?? UUID(),
+                category: .aviation,
+                location: airport,
+                startTime: a380Start,
+                endTime: a380End,
+                windowTitle: "A380 傍晚抵达观察窗口",
+                score: a380Score,
+                scoreLevel: .from(score: a380Score),
+                reasonSummary: "A380 机型值得关注，预计傍晚抵达，能见度和降雨条件可接受。",
+                reasonTags: ["A380", "值得关注", "能见度好", "傍晚光线"],
+                scoreBreakdown: makeScoreBreakdown(for: .aviation, score: a380Score),
+                notRecommendedReason: nil,
+                weatherSnapshot: airportWeather,
+                eventRefs: [a380Event],
+                recommendationText: "建议提前查看跑道方向，预留停车和步行时间。",
+                isBookmarked: false,
+                alertEnabled: false
             ),
             ShootingWindow(
                 id: UUID(uuidString: "EE6AF2D6-E06B-442E-BC9D-E23BC893E192") ?? UUID(),
@@ -286,6 +514,9 @@ struct MockDataService {
                 score: graduationScore,
                 scoreLevel: .from(score: graduationScore),
                 reasonSummary: "云量适中、风速较低，下午柔光适合校园人像。",
+                reasonTags: ["阴天柔光", "风小", "少雨", "温度舒适", "接近黄金时刻"],
+                scoreBreakdown: makeScoreBreakdown(for: .graduation, score: graduationScore),
+                notRecommendedReason: nil,
                 weatherSnapshot: campusWeather,
                 eventRefs: [graduationEvent],
                 recommendationText: "砂岩建筑、湖边和草坪都适合安排 20 分钟一组的拍摄节奏。",
@@ -302,6 +533,9 @@ struct MockDataService {
                 score: cityScore,
                 scoreLevel: .from(score: cityScore),
                 reasonSummary: "清晨蓝调时刻叠加较好能见度，适合城市天际线。",
+                reasonTags: ["蓝调时刻", "能见度好", "城市灯光", "降雨概率低"],
+                scoreBreakdown: makeScoreBreakdown(for: .cityscape, score: cityScore),
+                notRecommendedReason: nil,
                 weatherSnapshot: landscapeWeather,
                 eventRefs: [],
                 recommendationText: "建议使用三脚架，保留天空渐变和城市灯光细节。",
@@ -318,6 +552,9 @@ struct MockDataService {
                 score: portraitScore,
                 scoreLevel: .from(score: portraitScore),
                 reasonSummary: "黄金时刻接近、风速低，适合自然光人像。",
+                reasonTags: ["自然柔光", "风小", "少雨", "温度舒适"],
+                scoreBreakdown: makeScoreBreakdown(for: .portrait, score: portraitScore),
+                notRecommendedReason: nil,
                 weatherSnapshot: campusWeather,
                 eventRefs: [],
                 recommendationText: "逆光和侧逆光都可尝试，注意保留肤色和背景层次。",
@@ -336,8 +573,8 @@ struct MockDataService {
                 location: locations[2],
                 eventType: .milkyWayWindow,
                 minScore: 75,
-                remindBeforeMinutes: 180,
-                isEnabled: true,
+                remindBeforeMinutes: 1_500,
+                isEnabled: false,
                 keywords: ["银河", "新月", "低云量"]
             ),
             AlertRule(
@@ -363,6 +600,80 @@ struct MockDataService {
                 keywords: ["毕业照", "柔光", "校园"]
             )
         ]
+    }
+
+    private func makeWatchlistItems(user: UserProfile) -> [EventWatchlistItem] {
+        [
+            watchlistItem("D23EA570-85E1-4B67-A380-000000000001", user, .aviation, "A380", "A380"),
+            watchlistItem("D23EA570-85E1-4B67-A380-000000000002", user, .aviation, "B747", "B747"),
+            watchlistItem("D23EA570-85E1-4B67-A380-000000000003", user, .aviation, "Special Livery", "Special Livery"),
+            watchlistItem("D23EA570-85E1-4B67-A380-000000000004", user, .aviation, "Retro Livery", "Retro Livery"),
+            watchlistItem("D23EA570-85E1-4B67-A380-000000000005", user, .aviation, "Qantas", "Qantas"),
+            watchlistItem("D23EA570-85E1-4B67-A380-000000000006", user, .aviation, "Cargo", "Cargo"),
+            watchlistItem("D23EA570-85E1-4B67-A380-000000000007", user, .aviation, "Rare Aircraft", "Rare Aircraft"),
+            watchlistItem("D23EA570-85E1-4B67-A380-000000000008", user, .astro, "Meteor Shower", "Meteor Shower"),
+            watchlistItem("D23EA570-85E1-4B67-A380-000000000009", user, .graduation, "Graduation Season", "Graduation Season"),
+            watchlistItem("D23EA570-85E1-4B67-A380-000000000010", user, .landscape, "Fog", "Fog"),
+            watchlistItem("D23EA570-85E1-4B67-A380-000000000011", user, .landscape, "Fire Sunset", "Fire Sunset")
+        ]
+    }
+
+    private func watchlistItem(
+        _ id: String,
+        _ user: UserProfile,
+        _ category: PhotographyCategory,
+        _ keyword: String,
+        _ displayName: String
+    ) -> EventWatchlistItem {
+        EventWatchlistItem(
+            id: UUID(uuidString: id) ?? UUID(),
+            userId: user.id,
+            category: category,
+            keyword: keyword,
+            displayName: displayName,
+            isEnabled: true,
+            createdAt: date(dayOffset: -1, hour: 9, minute: 0)
+        )
+    }
+
+    private func makeScoreBreakdown(for category: PhotographyCategory, score: Int) -> [ScoreBreakdownItem] {
+        let specs: [(String, Int)]
+        switch category {
+        case .astro:
+            specs = [("天气", 35), ("月相", 20), ("光污染", 20), ("能见度", 15), ("地点条件", 10)]
+        case .aviation:
+            specs = [("航班稀缺度", 35), ("能见度", 20), ("降雨", 15), ("风速", 15), ("到场准备", 15)]
+        case .landscape, .cityscape:
+            specs = [("光线", 30), ("云量", 25), ("降雨", 20), ("风速", 15), ("地点条件", 10)]
+        case .portrait, .graduation:
+            specs = [("光线", 30), ("降雨", 20), ("风速", 20), ("温度", 20), ("地点条件", 10)]
+        case .wildlife:
+            specs = [("光线", 25), ("风速", 20), ("降雨", 20), ("能见度", 20), ("地点条件", 15)]
+        }
+
+        return scaledScoreBreakdown(specs: specs, totalScore: score)
+    }
+
+    private func scaledScoreBreakdown(
+        specs: [(title: String, maxScore: Int)],
+        totalScore: Int
+    ) -> [ScoreBreakdownItem] {
+        var scores = specs.map { Int(floor(Double($0.maxScore) * Double(totalScore) / 100.0)) }
+        var remaining = totalScore - scores.reduce(0, +)
+        var index = 0
+
+        while remaining > 0 && index < scores.count * 2 {
+            let targetIndex = index % scores.count
+            if scores[targetIndex] < specs[targetIndex].maxScore {
+                scores[targetIndex] += 1
+                remaining -= 1
+            }
+            index += 1
+        }
+
+        return zip(specs, scores).map { spec, score in
+            ScoreBreakdownItem(title: spec.title, score: score, maxScore: spec.maxScore)
+        }
     }
 
     private func weather(
@@ -403,8 +714,10 @@ struct MockDataService {
 
 struct MockSeedData {
     var user: UserProfile
+    var userPreference: UserPreference
     var locations: [ShootingLocation]
     var events: [ShootingEvent]
     var windows: [ShootingWindow]
     var alertRules: [AlertRule]
+    var watchlistItems: [EventWatchlistItem]
 }

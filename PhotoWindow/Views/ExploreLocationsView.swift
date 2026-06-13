@@ -1,22 +1,28 @@
 import SwiftUI
 
 struct ExploreLocationsView: View {
-    @StateObject private var viewModel: LocationViewModel
+    @StateObject private var viewModel: ExploreLocationsViewModel
 
-    init(viewModel: LocationViewModel) {
+    init(viewModel: ExploreLocationsViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text("拍摄地点")
-                    .font(.largeTitle.weight(.bold))
-                    .foregroundStyle(.white)
+                header
+                typeFilter
+                favoriteSection
+                allLocationsSection
 
-                ForEach(viewModel.locations) { location in
-                    locationCard(location)
+                NavigationLink {
+                    AddLocationScreen()
+                } label: {
+                    Label("添加地点", systemImage: "plus.circle")
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.borderedProminent)
+                .tint(Color.photoAccent)
             }
             .padding(20)
         }
@@ -28,10 +34,87 @@ struct ExploreLocationsView: View {
         }
     }
 
+    private var header: some View {
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("拍摄地点")
+                    .font(.largeTitle.weight(.bold))
+                    .foregroundStyle(.white)
+                Text("管理收藏地点和自定义拍摄点位。")
+                    .font(.subheadline)
+                    .foregroundStyle(Color.photoMutedText)
+            }
+
+            Spacer()
+        }
+    }
+
+    private var typeFilter: some View {
+        Picker("地点类型", selection: $viewModel.selectedType) {
+            Text("全部类型").tag(ShootingLocationType?.none)
+            ForEach(ShootingLocationType.allCases) { type in
+                Text(type.displayName).tag(Optional(type))
+            }
+        }
+        .pickerStyle(.menu)
+        .tint(Color.photoAccent)
+    }
+
+    private var favoriteSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionTitle("我的收藏地点")
+
+            if viewModel.filteredFavoriteLocations.isEmpty {
+                emptyState("还没有收藏地点。收藏常用点位后会优先生成高分窗口。")
+            } else {
+                ForEach(viewModel.filteredFavoriteLocations) { location in
+                    locationLink(location)
+                }
+            }
+        }
+    }
+
+    private var allLocationsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionTitle("所有保存地点")
+
+            if viewModel.filteredSavedLocations.isEmpty {
+                emptyState("添加你的第一个拍摄地点，PhotoWindow 会帮你寻找最佳拍摄时间。")
+            } else {
+                ForEach(viewModel.filteredSavedLocations) { location in
+                    locationLink(location)
+                }
+            }
+        }
+    }
+
+    private func sectionTitle(_ title: String) -> some View {
+        Text(title)
+            .font(.title3.weight(.semibold))
+            .foregroundStyle(.white)
+    }
+
+    private func emptyState(_ text: String) -> some View {
+        Text(text)
+            .font(.subheadline)
+            .foregroundStyle(Color.photoMutedText)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .photoCardStyle()
+    }
+
+    private func locationLink(_ location: ShootingLocation) -> some View {
+        NavigationLink {
+            LocationDetailScreen(locationID: location.id)
+        } label: {
+            locationCard(location)
+        }
+        .buttonStyle(.plain)
+    }
+
     private func locationCard(_ location: ShootingLocation) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top, spacing: 12) {
-                Image(systemName: icon(for: location.locationType))
+                Image(systemName: location.locationType.iconName)
                     .font(.title2)
                     .frame(width: 36, height: 36)
                     .foregroundStyle(Color.photoAccent)
@@ -50,6 +133,11 @@ struct ExploreLocationsView: View {
                 }
 
                 Spacer()
+
+                if location.isFavorite {
+                    Image(systemName: "star.fill")
+                        .foregroundStyle(Color.photoAccent)
+                }
             }
 
             HStack {
@@ -61,24 +149,9 @@ struct ExploreLocationsView: View {
             }
             .font(.caption)
             .foregroundStyle(Color.photoMutedText)
+
+            ReasonTagChips(tags: location.supportedCategories.map(\.displayName))
         }
         .photoCardStyle()
-    }
-
-    private func icon(for type: ShootingLocationType) -> String {
-        switch type {
-        case .airport:
-            return "airplane"
-        case .darkSky:
-            return "moon.stars"
-        case .campus:
-            return "graduationcap"
-        case .scenic:
-            return "mountain.2"
-        case .urban:
-            return "building.2"
-        case .wildlifeArea:
-            return "pawprint"
-        }
     }
 }
